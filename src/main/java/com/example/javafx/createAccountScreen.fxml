@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.javafx.Controller">
+   <children>
+      <Pane focusTraversable="true" managed="false" opacity="0.0" prefHeight="0.0" prefWidth="0.0" />
+      <TextField fx:id="accountScreenFirstName" layoutX="566.0" layoutY="300.0" promptText="First name" />
+      <TextField fx:id="accountScreenLastName" layoutX="566.0" layoutY="340.0" promptText="Last name" />
+      <TextField fx:id="accountScreenEmail" layoutX="566.0" layoutY="380.0" promptText="Email" />
+      <PasswordField fx:id="accountScreenPassword" layoutX="566.0" layoutY="420.0" promptText="Password" />
+      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="565.0" layoutY="111.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="file:/C:/Users/VerbartJonar(Calco)/OneDrive%20-%20Calco/Pictures/PhotoShop.png" />
+         </image>
+      </ImageView>
+      <Button layoutX="566.0" layoutY="460.0" mnemonicParsing="false" onAction="#createNewAccount" prefHeight="25.0" prefWidth="149.0" text="Create account" />
+   </children>
+</AnchorPane>
