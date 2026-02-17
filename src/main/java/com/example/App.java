@@ -17,6 +17,7 @@ public class App
     public static void main( String[] args )
     {
         //jsonWriter.writeToJsonFile(loginRepository.getMap());
+
         Application.launch(Javafx.class, args);
     }
 }

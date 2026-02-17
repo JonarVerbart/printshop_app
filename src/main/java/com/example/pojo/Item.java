@@ -7,6 +7,7 @@ public class Item {
     private String size;
     private String finish;
     private String unitPrice;
+    private String completionTime;
     private String quantity;
 
     public Item(String product, String size, String finish) {
@@ -30,6 +31,14 @@ public class Item {
         this.finish = finish;
         this.unitPrice = unitPrice;
         this.quantity = quantity;
+    }
+
+    public Item(String product, String size, String finish, String unitPrice, String completionTime) {
+        this.product = product;
+        this.size = size;
+        this.finish = finish;
+        this.unitPrice = unitPrice;
+        this.completionTime = completionTime;
     }
 
     public Integer getId() {
@@ -68,6 +77,14 @@ public class Item {
 
     public void setQuantity(String quantity) {
         this.quantity = quantity;
+    }
+
+    public String getCompletionTime() {
+        return completionTime;
+    }
+
+    public void setCompletionTime(String completionTime) {
+        this.completionTime = completionTime;
     }
 
 }

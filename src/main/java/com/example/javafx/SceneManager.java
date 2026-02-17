@@ -1,7 +1,9 @@
 package com.example.javafx;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
+import com.example.csvrw.CsvImporter;
 import com.example.database.ConnProvider;
 import com.example.database.DbInterface;
 import com.example.pojo.Customer;
@@ -24,6 +26,20 @@ public class SceneManager {
         stage = primaryStage;
         ConnProvider conn = new ConnProvider();
         dbInterface = new DbInterface(conn.getDataSource());
+        
+    }
+
+    public static void inventoryCsvToDb() {
+        CsvImporter csvImporter = new CsvImporter(dbInterface);
+        csvImporter.inventoryCsvToDb();
+    }
+
+    public static void clearItemTable() {
+        try {
+            dbInterface.clearItemTable();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public static void setLoggedCustomer(Customer customer) {

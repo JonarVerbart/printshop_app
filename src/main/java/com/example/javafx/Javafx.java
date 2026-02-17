@@ -14,6 +14,16 @@ public class Javafx extends Application{
     public void start(Stage primaryStage) throws Exception {
         SceneManager.init(primaryStage);
         SceneManager.switchTo("loginScreen.fxml");
+        SceneManager.inventoryCsvToDb();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                SceneManager.clearItemTable();
+                System.out.println("Application has shut down");
+            } catch (Exception e) {
+                e.getMessage();
+            }
+        }));
     }
 
     /*

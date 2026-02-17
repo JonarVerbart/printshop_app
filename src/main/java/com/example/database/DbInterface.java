@@ -126,8 +126,8 @@ public class DbInterface {
 
     public void insertItem(Item item) throws SQLException {
         String sqlQuery = """
-                INSERT INTO items (product, size, finish)
-                VALUES (?, ?, ?)
+                INSERT INTO items (product, size, finish, unit_price, completion_time)
+                VALUES (?, ?, ?, ?, ?)
                 """;
 
                 try(Connection conn = dataSource.getConnection();
@@ -135,6 +135,8 @@ public class DbInterface {
                 ps.setString(1, item.getProduct());
                 ps.setString(2, item.getSize());
                 ps.setString(3, item.getFinish());
+                ps.setString(4, item.getUnitPrice());
+                ps.setString(5, item.getCompletionTime());
 
                 ps.executeUpdate();
 
@@ -171,8 +173,28 @@ public class DbInterface {
                 }
                 } catch (SQLException e) {
                     System.out.println(e.getMessage());
+                    System.out.println("\nTHIS IS AN EXCEPTION\n");
                 }
             return null;
+    }
+
+    public void clearItemTable() throws SQLException {
+        String sqlQuery = """
+        DELETE from items WHERE id between 1 and 10000
+        """;
+        String sqlQuery2 = """
+        ALTER TABLE items AUTO_INCREMENT = 1
+        """;
+
+        try (Connection conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
+                ps.executeUpdate();
+            }
+        
+        try (Connection conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sqlQuery2)) {
+                ps.executeUpdate();
+            }
     }
     
 }

@@ -37,6 +37,8 @@ public class ShoppingScreenController extends BaseController {
 
     @FXML
     public void initialize() {
+        System.out.println("Initializing Shopping Screen...");
+
         fillProductList();
         fillSizesComboBox();
         fillFinishComboBox();
@@ -45,6 +47,8 @@ public class ShoppingScreenController extends BaseController {
         productColumn.setCellValueFactory(new PropertyValueFactory<>("product"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         unitPriceColumn.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
+
+        System.out.println("Shopping Screen initialized");
     }
 
     public void logOut(ActionEvent event) throws Exception {
@@ -60,18 +64,19 @@ public class ShoppingScreenController extends BaseController {
             sizesComboBox.getSelectionModel().getSelectedItem(), 
             finishComboBox.getSelectionModel().getSelectedItem()
         );
-        cartItem.setQuantity(quantityTextField.getText());
 
-        cartTableView.getItems().add(cartItem);
-
-        // cartTableView.getColumns().set(0, "testerdetest");  // probs set these per TableColumn
+        if (cartItem != null) {
+            cartItem.setQuantity(quantityTextField.getText());
+            cartTableView.getItems().add(cartItem);
+        } else {
+            System.out.println("Item doesn't exist in database");
+        }
     }
 
     public void fillProductList() {
         //ObservableList<String> productList = FXCollections.observableArrayList("Paper", "Canvas", "Plate");
         //shoppingScreenProducts.setItems(productList);
         productList.getItems().setAll("Paper", "Canvas", "Glass");
-        System.out.println("Initialising");
     }
 
     public void fillSizesComboBox() {
