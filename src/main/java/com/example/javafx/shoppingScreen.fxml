@@ -32,8 +32,8 @@
                                        <children>
                                           <VBox alignment="CENTER" minWidth="150.0" spacing="30.0">
                                              <children>
-                                                <ChoiceBox prefHeight="100.0" prefWidth="274.0" />
-                                                <ChoiceBox prefHeight="100.0" prefWidth="274.0" />
+                                                <ComboBox fx:id="sizesComboBox" prefHeight="100.0" prefWidth="274.0" promptText="Size" />
+                                                <ComboBox fx:id="finishComboBox" prefHeight="100.0" prefWidth="274.0" promptText="Finish" />
                                              </children>
                                              <HBox.margin>
                                                 <Insets left="80.0" />
@@ -41,12 +41,12 @@
                                           </VBox>
                                           <VBox alignment="CENTER" minWidth="150.0" spacing="30.0">
                                              <children>
-                                                <TextField alignment="CENTER" minWidth="150.0" promptText="Quantity">
+                                                <TextField fx:id="quantityTextField" alignment="CENTER" minWidth="150.0" promptText="Quantity">
                                                    <font>
                                                       <Font size="24.0" />
                                                    </font>
                                                 </TextField>
-                                                <Button minHeight="50.0" minWidth="100.0" mnemonicParsing="false" text="Add to cart" />
+                                                <Button minHeight="50.0" minWidth="100.0" mnemonicParsing="false" onAction="#addToCart" text="Add to cart" />
                                              </children>
                                           </VBox>
                                           <VBox alignment="CENTER">
@@ -65,11 +65,11 @@
                                       <items>
                                         <AnchorPane>
                                              <children>
-                                                <TableView AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                <TableView fx:id="cartTableView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                   <columns>
-                                                    <TableColumn minWidth="200.0" prefWidth="411.0" text="Item" />
-                                                    <TableColumn minWidth="70.0" prefWidth="100.0" text="Quantity" />
-                                                      <TableColumn minWidth="70.0" prefWidth="100.0" text="Unit price" />
+                                                    <TableColumn fx:id="productColumn" minWidth="200.0" prefWidth="411.0" text="Item" />
+                                                    <TableColumn fx:id="quantityColumn" minWidth="70.0" prefWidth="100.0" text="Quantity" />
+                                                      <TableColumn fx:id="unitPriceColumn" minWidth="70.0" prefWidth="100.0" text="Unit price" />
                                                   </columns>
                                                 </TableView>
                                              </children>

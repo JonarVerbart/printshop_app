@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 import org.mindrot.jbcrypt.BCrypt;
 
 import com.example.pojo.Customer;
+import com.example.pojo.Item;
 
 public class DbInterface {
 
@@ -121,6 +122,57 @@ public class DbInterface {
             System.out.println(e.getMessage());
         }
         return null;
+    }
+
+    public void insertItem(Item item) throws SQLException {
+        String sqlQuery = """
+                INSERT INTO items (product, size, finish)
+                VALUES (?, ?, ?)
+                """;
+
+                try(Connection conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS)) {
+                ps.setString(1, item.getProduct());
+                ps.setString(2, item.getSize());
+                ps.setString(3, item.getFinish());
+
+                ps.executeUpdate();
+
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        item.setId(rs.getInt(1));
+                    }
+                }
+            }
+    }
+
+    public Item retrieveItem(String product, String size, String finish) {
+        try {
+        String sqlQuery = """
+                SELECT id, product, size, finish, unit_price
+                FROM items
+                WHERE product = ? and size = ? and finish = ?
+                """;
+
+                try (Connection conn = dataSource.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
+
+                    ps.setString(1, product);
+                    ps.setString(2, size);
+                    ps.setString(3, finish);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                        Integer id = rs.getInt("id");
+                        String unitPrice = rs.getString("unit_price");
+                        Item item = new Item(id, product, size, finish, unitPrice);
+                        return item;
+                        }
+                    }
+                }
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+            return null;
     }
     
 }
