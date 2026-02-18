@@ -9,6 +9,7 @@ public class Item {
     private String unitPrice;
     private String completionTime;
     private String quantity;
+    private String fullDisplayName;
 
     public Item(String product, String size, String finish) {
         this.product = product;
@@ -24,13 +25,13 @@ public class Item {
         this.unitPrice = unitPrice;
     }
 
-    public Item(Integer id, String product, String size, String finish, String unitPrice, String quantity) {
+    public Item(Integer id, String product, String size, String finish, String unitPrice, String completionTime) {
         this.id = id;
         this.product = product;
         this.size = size;
         this.finish = finish;
         this.unitPrice = unitPrice;
-        this.quantity = quantity;
+        this.completionTime = completionTime;
     }
 
     public Item(String product, String size, String finish, String unitPrice, String completionTime) {
@@ -39,6 +40,14 @@ public class Item {
         this.finish = finish;
         this.unitPrice = unitPrice;
         this.completionTime = completionTime;
+    }
+
+    public void setFullDisplayName() {
+        this.fullDisplayName = product + " " + size + " " + finish;
+    }
+
+    public String getFullDisplayName() {
+        return fullDisplayName;
     }
 
     public Integer getId() {

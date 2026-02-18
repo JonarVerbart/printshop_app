@@ -152,7 +152,7 @@ public class DbInterface {
     public Item retrieveItem(String product, String size, String finish) {
         try {
         String sqlQuery = """
-                SELECT id, product, size, finish, unit_price
+                SELECT id, product, size, finish, unit_price, completion_time
                 FROM items
                 WHERE product = ? and size = ? and finish = ?
                 """;
@@ -167,8 +167,9 @@ public class DbInterface {
                         if (rs.next()) {
                         Integer id = rs.getInt("id");
                         String unitPrice = rs.getString("unit_price");
-                        Item item = new Item(id, product, size, finish, unitPrice);
-                        return item;
+                        String completionTime = rs.getString("completion_time");
+                            Item item = new Item(id, product, size, finish, unitPrice, completionTime);
+                            return item;
                         }
                     }
                 }
@@ -237,6 +238,31 @@ public class DbInterface {
                         distinctSizes.add(rs.getString("size"));
                         }
                         return distinctSizes;
+                    }
+                }
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+            return null;
+    }
+
+    public ArrayList<String> retrieveDistinctFinishes(String productType) {
+        try {
+        String sqlQuery = """
+                SELECT DISTINCT finish
+                FROM items
+                WHERE product = ?
+                """;
+
+                try (Connection conn = dataSource.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
+                    ps.setString(1, productType);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        ArrayList<String> distinctFinishes = new ArrayList<String>();
+                        while (rs.next()) {
+                        distinctFinishes.add(rs.getString("finish"));
+                        }
+                        return distinctFinishes;
                     }
                 }
                 } catch (SQLException e) {

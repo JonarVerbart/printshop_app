@@ -39,7 +39,7 @@ public class ShoppingScreenController extends BaseController {
     public void initialize() {
         System.out.println("Initializing Shopping Screen...");
 
-        productColumn.setCellValueFactory(new PropertyValueFactory<>("product"));
+        productColumn.setCellValueFactory(new PropertyValueFactory<>("fullDisplayName"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         unitPriceColumn.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
 
@@ -50,7 +50,7 @@ public class ShoppingScreenController extends BaseController {
     public void initializeFromDb() {
         fillProductList();
         //fillSizesComboBox();
-        fillFinishComboBox();
+        //fillFinishComboBox();
     }
 
     public void logOut(ActionEvent event) throws Exception {
@@ -68,6 +68,7 @@ public class ShoppingScreenController extends BaseController {
 
         if (cartItem != null) {
             cartItem.setQuantity(quantityTextField.getText());
+            cartItem.setFullDisplayName();
             cartTableView.getItems().add(cartItem);
         } else {
             System.out.println("Item doesn't exist in database");
@@ -86,7 +87,13 @@ public class ShoppingScreenController extends BaseController {
     }
 
     public void fillFinishComboBox() {
-        finishComboBox.getItems().setAll("Mat", "High Gloss");
+        String productType = productList.getSelectionModel().getSelectedItem();
+        finishComboBox.getItems().setAll(dbInterface.retrieveDistinctFinishes(productType));
+    }
+
+    public void updateComboBoxes() {
+        fillSizesComboBox();
+        fillFinishComboBox();
     }
 
 }
