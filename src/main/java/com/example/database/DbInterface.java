@@ -174,7 +174,6 @@ public class DbInterface {
                 }
                 } catch (SQLException e) {
                     System.out.println(e.getMessage());
-                    System.out.println("\nTHIS IS AN EXCEPTION\n");
                 }
             return null;
     }
@@ -217,7 +216,31 @@ public class DbInterface {
                 }
                 } catch (SQLException e) {
                     System.out.println(e.getMessage());
-                    System.out.println("\nTHIS IS AN EXCEPTION\n");
+                }
+            return null;
+    }
+
+    public ArrayList<String> retrieveDistinctSizes(String productType) {
+        try {
+        String sqlQuery = """
+                SELECT DISTINCT size
+                FROM items
+                WHERE product = ?
+                """;
+
+                try (Connection conn = dataSource.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
+                    ps.setString(1, productType);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        ArrayList<String> distinctSizes = new ArrayList<String>();
+                        while (rs.next()) {
+                        distinctSizes.add(rs.getString("size"));
+                        }
+                        return distinctSizes;
+                    }
+                }
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
                 }
             return null;
     }

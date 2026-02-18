@@ -23,7 +23,7 @@ public class CsvImporter {
     public void inventoryCsvToDb() {
 
         List<List<String>> inventory = new ArrayList<List<String>>();
-        try(CSVReader csvReader = new CSVReader(new FileReader("src/main/resources/inventory_expanded_nobom.csv"));) {
+        try(CSVReader csvReader = new CSVReader(new FileReader("src/main/resources/inventory_expanded_nobom_redacted.csv"));) {
             String[] values = null;
             while ((values = csvReader.readNext()) != null) {
                 inventory.add(Arrays.asList(values));

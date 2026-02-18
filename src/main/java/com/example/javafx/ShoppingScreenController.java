@@ -39,8 +39,6 @@ public class ShoppingScreenController extends BaseController {
     public void initialize() {
         System.out.println("Initializing Shopping Screen...");
 
-        
-
         productColumn.setCellValueFactory(new PropertyValueFactory<>("product"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         unitPriceColumn.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
@@ -51,7 +49,7 @@ public class ShoppingScreenController extends BaseController {
     @Override
     public void initializeFromDb() {
         fillProductList();
-        fillSizesComboBox();
+        //fillSizesComboBox();
         fillFinishComboBox();
     }
 
@@ -62,7 +60,6 @@ public class ShoppingScreenController extends BaseController {
     }
 
     public void addToCart() {
-        
         Item cartItem = dbInterface.retrieveItem(
             productList.getSelectionModel().getSelectedItem(), 
             sizesComboBox.getSelectionModel().getSelectedItem(), 
@@ -84,7 +81,8 @@ public class ShoppingScreenController extends BaseController {
     }
 
     public void fillSizesComboBox() {
-        sizesComboBox.getItems().setAll("10 x 15", "30 x 40", "100 x 150");
+        String productType = productList.getSelectionModel().getSelectedItem();
+        sizesComboBox.getItems().setAll(dbInterface.retrieveDistinctSizes(productType));
     }
 
     public void fillFinishComboBox() {

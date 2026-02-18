@@ -19,7 +19,7 @@
               <items>
                 <AnchorPane minWidth="200.0">
                      <children>
-                        <ListView fx:id="productList" layoutX="27.0" layoutY="54.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <ListView fx:id="productList" layoutX="27.0" layoutY="54.0" onMouseClicked="#fillSizesComboBox" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
                 <AnchorPane SplitPane.resizableWithParent="false">
