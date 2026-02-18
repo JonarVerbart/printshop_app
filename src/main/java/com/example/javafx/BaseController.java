@@ -15,4 +15,6 @@ public abstract class BaseController {
     public void setLoggedCustomer(Customer loggedCustomer) {
         this.loggedCustomer = loggedCustomer;
     }
+
+    public abstract void initializeFromDb();
 }

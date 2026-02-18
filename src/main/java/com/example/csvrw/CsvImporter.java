@@ -31,7 +31,7 @@ public class CsvImporter {
         } catch (CsvValidationException | IOException e) {
             System.out.println(e.getMessage());
         } 
-        inventory.forEach(inner -> System.out.println(inner));
+        //inventory.forEach(inner -> System.out.println(inner));
 
         //List<Item> items = new ArrayList<>();
         inventory.forEach(innerList -> {

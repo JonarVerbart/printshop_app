@@ -49,10 +49,11 @@ public class SceneManager {
     public static void switchTo(String fxml) throws IOException {
         FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource(fxml));
         Parent root = loader.load();
-
+        
         BaseController controller = loader.getController();
         controller.setDbInterface(dbInterface);
         controller.setLoggedCustomer(loggedCustomer);
+        controller.initializeFromDb();
 
         stage.setScene(new Scene(root));
         stage.show();

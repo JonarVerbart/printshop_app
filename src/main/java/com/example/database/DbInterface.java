@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import javax.sql.DataSource;
 
@@ -195,6 +196,30 @@ public class DbInterface {
             PreparedStatement ps = conn.prepareStatement(sqlQuery2)) {
                 ps.executeUpdate();
             }
+    }
+
+    public ArrayList<String> retrieveDistinctProducts() {
+        try {
+        String sqlQuery = """
+                SELECT DISTINCT product
+                FROM items
+                """;
+                try (Connection conn = dataSource.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
+
+                    try (ResultSet rs = ps.executeQuery()) {
+                        ArrayList<String> distinctProducts = new ArrayList<String>();
+                        while (rs.next()) {
+                        distinctProducts.add(rs.getString("product"));
+                        }
+                        return distinctProducts;
+                    }
+                }
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                    System.out.println("\nTHIS IS AN EXCEPTION\n");
+                }
+            return null;
     }
     
 }

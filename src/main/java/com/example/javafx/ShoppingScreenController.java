@@ -39,16 +39,20 @@ public class ShoppingScreenController extends BaseController {
     public void initialize() {
         System.out.println("Initializing Shopping Screen...");
 
-        fillProductList();
-        fillSizesComboBox();
-        fillFinishComboBox();
-        fillSizesComboBox();
+        
 
         productColumn.setCellValueFactory(new PropertyValueFactory<>("product"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         unitPriceColumn.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
 
         System.out.println("Shopping Screen initialized");
+    }
+
+    @Override
+    public void initializeFromDb() {
+        fillProductList();
+        fillSizesComboBox();
+        fillFinishComboBox();
     }
 
     public void logOut(ActionEvent event) throws Exception {
@@ -76,7 +80,7 @@ public class ShoppingScreenController extends BaseController {
     public void fillProductList() {
         //ObservableList<String> productList = FXCollections.observableArrayList("Paper", "Canvas", "Plate");
         //shoppingScreenProducts.setItems(productList);
-        productList.getItems().setAll("Paper", "Canvas", "Glass");
+        productList.getItems().setAll(dbInterface.retrieveDistinctProducts());
     }
 
     public void fillSizesComboBox() {

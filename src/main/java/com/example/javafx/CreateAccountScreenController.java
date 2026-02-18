@@ -20,6 +20,11 @@ public class CreateAccountScreenController extends BaseController {
     @FXML
     private TextField password;
 
+    @Override
+    public void initializeFromDb() {
+        // Auto runs after initialize() auto runs, to use for DB stuff that needs to run on initialize 
+    }
+
     @FXML
     public void createNewAccount(ActionEvent event) {
         Customer customer = new Customer(email.getText(), firstName.getText(), lastName.getText());
