@@ -1,9 +1,7 @@
 package com.example.javafx;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
-import java.security.PublicKey;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -14,6 +12,7 @@ import com.example.pojo.Order;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -112,6 +111,31 @@ public class ShoppingScreenController extends BaseController {
     public void updateComboBoxes() {
         fillSizesComboBox();
         fillFinishComboBox();
+        
+        // THIS I NEED TO REVIEW BUT IT WORKS
+        sizesComboBox.getSelectionModel().clearSelection();
+        sizesComboBox.setValue(null);
+
+        finishComboBox.getSelectionModel().clearSelection();
+        finishComboBox.setValue(null);
+
+        // FIX: Use prompt-aware button cells
+        sizesComboBox.setButtonCell(new ListCell<String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText((empty || item == null) ? sizesComboBox.getPromptText() : item);
+            }
+        });
+
+        finishComboBox.setButtonCell(new ListCell<String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText((empty || item == null) ? finishComboBox.getPromptText() : item);
+            }
+        });
+        // THIS I NEED TO REVIEW BUT IT WORKS
     }
 
     public void placeOrder() {
