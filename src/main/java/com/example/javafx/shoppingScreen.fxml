@@ -51,7 +51,7 @@
                                           </VBox>
                                           <VBox alignment="CENTER">
                                              <children>
-                                                <ListView />
+                                                <ListView fx:id="liveReceipt" />
                                                 <TextArea prefHeight="200.0" promptText="Order notes" />
                                              </children>
                                           </VBox>

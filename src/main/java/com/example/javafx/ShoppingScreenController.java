@@ -1,7 +1,12 @@
 package com.example.javafx;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.security.PublicKey;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.example.pojo.Item;
 import com.example.pojo.Order;
@@ -19,19 +24,18 @@ public class ShoppingScreenController extends BaseController {
     
     @FXML
     private ListView<String> productList;
+    @FXML
+    private ListView<String> liveReceipt;
 
     @FXML
     private ComboBox<String> sizesComboBox;
-
     @FXML
     private ComboBox<String> finishComboBox;
-
-    @FXML
-    private TableView<Item> cartTableView;
-
     @FXML
     private TextField quantityTextField;
 
+    @FXML
+    private TableView<Item> cartTableView;
     @FXML
     private TableColumn<Item, String> productColumn;
     @FXML
@@ -81,6 +85,9 @@ public class ShoppingScreenController extends BaseController {
 
             newOrder.addItem(cartItem);
 
+            updateOrderCosts();
+            updateLiveReceipt();
+
         } else {
             System.out.println("Item doesn't exist in database");
         }
@@ -118,6 +125,39 @@ public class ShoppingScreenController extends BaseController {
         orderItems.forEach(orderItem -> {
             dbInterface.insertOrderItem(newOrder.getId(), orderItem.getId(), orderItem.getQuantity());
         } );
+        System.out.println("Order was placed");
+    }
+
+    public void updateOrderCosts() {
+        BigDecimal vat = BigDecimal.ZERO;
+        AtomicReference<BigDecimal> subTotal = new AtomicReference<>(BigDecimal.ZERO);
+
+        List<Item> orderItems = newOrder.getItems();
+        orderItems.forEach(orderItem -> {
+            BigDecimal unitPrice = new BigDecimal(orderItem.getUnitPrice().toString());
+            System.out.println(unitPrice);
+            BigDecimal quantity = new BigDecimal(orderItem.getQuantity().toString());
+            System.out.println(quantity);
+            subTotal.set(subTotal.get().add(unitPrice.multiply(quantity).setScale(2, RoundingMode.HALF_UP)));
+            System.out.println(subTotal);
+        });
+
+        vat = subTotal.get().multiply(new BigDecimal(0.21)).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal total = subTotal.get().add(vat);
+
+        newOrder.setSubTotalCost(subTotal.get());
+        newOrder.setTotalVAT(vat);
+        newOrder.setTotalCost(total);
+    }
+
+    public void updateLiveReceipt() {
+        String[] receiptElements = new String[4];
+        receiptElements[0] = "Subtotal: " + newOrder.getSubTotalCost();
+        receiptElements[1] = "21% VAT: " + newOrder.getTotalVAT();
+        receiptElements[2] = "----------------------------- +";
+        receiptElements[3] = "Total: " + newOrder.getTotalCost();
+
+        liveReceipt.getItems().setAll(receiptElements);
     }
 
 }

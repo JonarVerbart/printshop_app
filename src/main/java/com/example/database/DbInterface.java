@@ -314,15 +314,18 @@ public class DbInterface {
     public void insertOrder(Order order) {
         try {
         String sqlQuery = """
-                INSERT INTO orders (customer_id, order_placed, order_closed)
-                VALUES (?, ?, ?)
+                INSERT INTO orders (customer_id, order_placed, sub_total_cost, total_VAT, total_cost, order_closed)
+                VALUES (?, ?, ?, ?, ?, ?)
                 """;
 
                 try(Connection conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setInt(1, order.getCustomerId());
                 ps.setTimestamp(2, order.getOrderPlacedTimestamp());
-                ps.setBoolean(3, order.getOrderClosed());
+                ps.setBigDecimal(3, order.getSubTotalCost());
+                ps.setBigDecimal(4, order.getTotalVAT());
+                ps.setBigDecimal(5, order.getTotalCost());
+                ps.setBoolean(6, order.getOrderClosed());
 
                 ps.executeUpdate();
 
@@ -330,7 +333,6 @@ public class DbInterface {
                     if (rs.next()) {
                         
                         order.setId(rs.getInt(1));
-                        System.out.println("Is the bus still runnin?");
                     }
                 }
             }
