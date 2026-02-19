@@ -1,6 +1,10 @@
 package com.example.javafx;
 
+import java.sql.Timestamp;
+import java.util.List;
+
 import com.example.pojo.Item;
+import com.example.pojo.Order;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -35,6 +39,8 @@ public class ShoppingScreenController extends BaseController {
     @FXML
     private TableColumn<Item, String> unitPriceColumn;
 
+    Order newOrder;
+
     @FXML
     public void initialize() {
         System.out.println("Initializing Shopping Screen...");
@@ -42,6 +48,8 @@ public class ShoppingScreenController extends BaseController {
         productColumn.setCellValueFactory(new PropertyValueFactory<>("fullDisplayName"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         unitPriceColumn.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
+
+        newOrder = new Order();
 
         System.out.println("Shopping Screen initialized");
     }
@@ -67,9 +75,12 @@ public class ShoppingScreenController extends BaseController {
         );
 
         if (cartItem != null) {
-            cartItem.setQuantity(quantityTextField.getText());
+            cartItem.setQuantity(Integer.valueOf(quantityTextField.getText()));
             cartItem.setFullDisplayName();
             cartTableView.getItems().add(cartItem);
+
+            newOrder.addItem(cartItem);
+
         } else {
             System.out.println("Item doesn't exist in database");
         }
@@ -94,6 +105,19 @@ public class ShoppingScreenController extends BaseController {
     public void updateComboBoxes() {
         fillSizesComboBox();
         fillFinishComboBox();
+    }
+
+    public void placeOrder() {
+        newOrder.setCustomerId(loggedCustomer.getId());
+        newOrder.setOrderClosed(false);
+        newOrder.setOrderPlacedTimestamp(new Timestamp(System.currentTimeMillis()));
+
+        dbInterface.insertOrder(newOrder);
+
+        List<Item> orderItems = newOrder.getItems();
+        orderItems.forEach(orderItem -> {
+            dbInterface.insertOrderItem(newOrder.getId(), orderItem.getId(), orderItem.getQuantity());
+        } );
     }
 
 }

@@ -12,6 +12,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import com.example.pojo.Customer;
 import com.example.pojo.Item;
+import com.example.pojo.Order;
 
 public class DbInterface {
 
@@ -179,7 +180,45 @@ public class DbInterface {
             return null;
     }
 
-    public void clearItemTable() throws SQLException {
+    public void clearOrderItemTable() throws SQLException {
+        String sqlQuery = """
+        DELETE from order_item WHERE id between 1 and 10000
+        """;
+        String sqlQuery2 = """
+        ALTER TABLE order_item AUTO_INCREMENT = 1
+        """;
+
+        try (Connection conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
+                ps.executeUpdate();
+            }
+        
+        try (Connection conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sqlQuery2)) {
+                ps.executeUpdate();
+            }
+    }
+
+    public void clearOrdersTable() throws SQLException {
+        String sqlQuery = """
+        DELETE from orders WHERE id between 1 and 10000
+        """;
+        String sqlQuery2 = """
+        ALTER TABLE orders AUTO_INCREMENT = 1
+        """;
+
+        try (Connection conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
+                ps.executeUpdate();
+            }
+        
+        try (Connection conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sqlQuery2)) {
+                ps.executeUpdate();
+            }
+    }
+
+    public void clearItemsTable() throws SQLException {
         String sqlQuery = """
         DELETE from items WHERE id between 1 and 10000
         """;
@@ -198,6 +237,7 @@ public class DbInterface {
             }
     }
 
+    
     public ArrayList<String> retrieveDistinctProducts() {
         try {
         String sqlQuery = """
@@ -270,5 +310,53 @@ public class DbInterface {
                 }
             return null;
     }
-    
+
+    public void insertOrder(Order order) {
+        try {
+        String sqlQuery = """
+                INSERT INTO orders (customer_id, order_placed, order_closed)
+                VALUES (?, ?, ?)
+                """;
+
+                try(Connection conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS)) {
+                ps.setInt(1, order.getCustomerId());
+                ps.setTimestamp(2, order.getOrderPlacedTimestamp());
+                ps.setBoolean(3, order.getOrderClosed());
+
+                ps.executeUpdate();
+
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        
+                        order.setId(rs.getInt(1));
+                        System.out.println("Is the bus still runnin?");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+    }
+
+    public void insertOrderItem(Integer orderId, Integer itemId, Integer quantity) {
+        try {
+        String sqlQuery = """
+                INSERT INTO order_item (order_id, item_id, quantity)
+                VALUES (?, ?, ?)
+                """;
+
+                try(Connection conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS)) {
+                ps.setInt(1, orderId);
+                ps.setInt(2, itemId);
+                ps.setInt(3, quantity);
+
+                ps.executeUpdate();
+            }
+        } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+    }
+
 }

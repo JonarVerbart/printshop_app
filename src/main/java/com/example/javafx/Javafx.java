@@ -18,7 +18,9 @@ public class Javafx extends Application{
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
-                SceneManager.clearItemTable();
+                SceneManager.clearOrderItemTable();
+                SceneManager.clearOrdersTable();
+                SceneManager.clearItemsTable();
                 System.out.println("Application has shut down");
             } catch (Exception e) {
                 e.getMessage();

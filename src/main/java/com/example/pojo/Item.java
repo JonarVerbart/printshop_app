@@ -8,7 +8,7 @@ public class Item {
     private String finish;
     private String unitPrice;
     private String completionTime;
-    private String quantity;
+    private Integer quantity;
     private String fullDisplayName;
 
     public Item(String product, String size, String finish) {
@@ -80,11 +80,11 @@ public class Item {
         this.unitPrice = unitPrice;
     }
 
-    public String getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(String quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 

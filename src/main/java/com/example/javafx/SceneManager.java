@@ -34,9 +34,23 @@ public class SceneManager {
         csvImporter.inventoryCsvToDb();
     }
 
-    public static void clearItemTable() {
+    public static void clearOrderItemTable() {
         try {
-            dbInterface.clearItemTable();
+            dbInterface.clearOrderItemTable();;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    public static void clearOrdersTable() {
+        try {
+            dbInterface.clearOrdersTable();;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    public static void clearItemsTable() {
+        try {
+            dbInterface.clearItemsTable();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
