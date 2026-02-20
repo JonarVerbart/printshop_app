@@ -1,5 +1,5 @@
 package com.example.jsonrw;
 
-public class JsonRead {
+public class JsonReader {
     
 }

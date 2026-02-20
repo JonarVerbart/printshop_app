@@ -4,12 +4,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import javax.sql.DataSource;
 
 import org.mindrot.jbcrypt.BCrypt;
 
 import com.example.pojo.Customer;
+import com.example.pojo.Item;
+import com.example.pojo.Order;
 
 public class DbInterface {
 
@@ -122,5 +125,240 @@ public class DbInterface {
         }
         return null;
     }
+
+    public void insertItem(Item item) throws SQLException {
+        String sqlQuery = """
+                INSERT INTO items (product, size, finish, unit_price, completion_time)
+                VALUES (?, ?, ?, ?, ?)
+                """;
+
+                try(Connection conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS)) {
+                ps.setString(1, item.getProduct());
+                ps.setString(2, item.getSize());
+                ps.setString(3, item.getFinish());
+                ps.setString(4, item.getUnitPrice());
+                ps.setString(5, item.getCompletionTime());
+
+                ps.executeUpdate();
+
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        item.setId(rs.getInt(1));
+                    }
+                }
+            }
+    }
+
+    public Item retrieveItem(String product, String size, String finish) {
+        try {
+        String sqlQuery = """
+                SELECT id, product, size, finish, unit_price, completion_time
+                FROM items
+                WHERE product = ? and size = ? and finish = ?
+                """;
+
+                try (Connection conn = dataSource.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
+
+                    ps.setString(1, product);
+                    ps.setString(2, size);
+                    ps.setString(3, finish);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                        Integer id = rs.getInt("id");
+                        String unitPrice = rs.getString("unit_price");
+                        String completionTime = rs.getString("completion_time");
+                            Item item = new Item(id, product, size, finish, unitPrice, completionTime);
+                            return item;
+                        }
+                    }
+                }
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+            return null;
+    }
+
+    public void clearOrderItemTable() throws SQLException {
+        String sqlQuery = """
+        DELETE from order_item WHERE id between 1 and 10000
+        """;
+        String sqlQuery2 = """
+        ALTER TABLE order_item AUTO_INCREMENT = 1
+        """;
+
+        try (Connection conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
+                ps.executeUpdate();
+            }
+        
+        try (Connection conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sqlQuery2)) {
+                ps.executeUpdate();
+            }
+    }
+
+    public void clearOrdersTable() throws SQLException {
+        String sqlQuery = """
+        DELETE from orders WHERE id between 1 and 10000
+        """;
+        String sqlQuery2 = """
+        ALTER TABLE orders AUTO_INCREMENT = 1
+        """;
+
+        try (Connection conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
+                ps.executeUpdate();
+            }
+        
+        try (Connection conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sqlQuery2)) {
+                ps.executeUpdate();
+            }
+    }
+
+    public void clearItemsTable() throws SQLException {
+        String sqlQuery = """
+        DELETE from items WHERE id between 1 and 10000
+        """;
+        String sqlQuery2 = """
+        ALTER TABLE items AUTO_INCREMENT = 1
+        """;
+
+        try (Connection conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
+                ps.executeUpdate();
+            }
+        
+        try (Connection conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sqlQuery2)) {
+                ps.executeUpdate();
+            }
+    }
+
     
+    public ArrayList<String> retrieveDistinctProducts() {
+        try {
+        String sqlQuery = """
+                SELECT DISTINCT product
+                FROM items
+                """;
+                try (Connection conn = dataSource.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
+
+                    try (ResultSet rs = ps.executeQuery()) {
+                        ArrayList<String> distinctProducts = new ArrayList<String>();
+                        while (rs.next()) {
+                        distinctProducts.add(rs.getString("product"));
+                        }
+                        return distinctProducts;
+                    }
+                }
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+            return null;
+    }
+
+    public ArrayList<String> retrieveDistinctSizes(String productType) {
+        try {
+        String sqlQuery = """
+                SELECT DISTINCT size
+                FROM items
+                WHERE product = ?
+                """;
+
+                try (Connection conn = dataSource.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
+                    ps.setString(1, productType);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        ArrayList<String> distinctSizes = new ArrayList<String>();
+                        while (rs.next()) {
+                        distinctSizes.add(rs.getString("size"));
+                        }
+                        return distinctSizes;
+                    }
+                }
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+            return null;
+    }
+
+    public ArrayList<String> retrieveDistinctFinishes(String productType) {
+        try {
+        String sqlQuery = """
+                SELECT DISTINCT finish
+                FROM items
+                WHERE product = ?
+                """;
+
+                try (Connection conn = dataSource.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
+                    ps.setString(1, productType);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        ArrayList<String> distinctFinishes = new ArrayList<String>();
+                        while (rs.next()) {
+                        distinctFinishes.add(rs.getString("finish"));
+                        }
+                        return distinctFinishes;
+                    }
+                }
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+            return null;
+    }
+
+    public void insertOrder(Order order) {
+        try {
+        String sqlQuery = """
+                INSERT INTO orders (customer_id, order_placed, sub_total_cost, total_VAT, total_cost, order_closed)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """;
+
+                try(Connection conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS)) {
+                ps.setInt(1, order.getCustomerId());
+                ps.setTimestamp(2, order.getOrderPlacedTimestamp());
+                ps.setBigDecimal(3, order.getSubTotalCost());
+                ps.setBigDecimal(4, order.getTotalVAT());
+                ps.setBigDecimal(5, order.getTotalCost());
+                ps.setBoolean(6, order.getOrderClosed());
+
+                ps.executeUpdate();
+
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        
+                        order.setId(rs.getInt(1));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+    }
+
+    public void insertOrderItem(Integer orderId, Integer itemId, Integer quantity) {
+        try {
+        String sqlQuery = """
+                INSERT INTO order_item (order_id, item_id, quantity)
+                VALUES (?, ?, ?)
+                """;
+
+                try(Connection conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS)) {
+                ps.setInt(1, orderId);
+                ps.setInt(2, itemId);
+                ps.setInt(3, quantity);
+
+                ps.executeUpdate();
+            }
+        } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+    }
+
 }

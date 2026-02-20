@@ -1,7 +1,7 @@
 package com.example;
 
 import com.example.javafx.Javafx;
-import com.example.jsonrw.JsonWrite;
+import com.example.jsonrw.JsonWriter;
 
 import javafx.application.Application;
 
@@ -13,10 +13,9 @@ import javafx.application.Application;
  */
 public class App 
 {
-    static JsonWrite jsonWriter = new JsonWrite();
+    static JsonWriter jsonWriter = new JsonWriter();
     public static void main( String[] args )
     {
-        //jsonWriter.writeToJsonFile(loginRepository.getMap());
         Application.launch(Javafx.class, args);
     }
 }
