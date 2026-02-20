@@ -85,7 +85,7 @@
                                                                   <Insets top="70.0" />
                                                                </StackPane.margin>
                                                             </Button>
-                                                            <Button minHeight="50.0" minWidth="100.0" mnemonicParsing="false" text="Save Cart" StackPane.alignment="CENTER">
+                                                            <Button minHeight="50.0" minWidth="100.0" mnemonicParsing="false" onAction="#exportCartToJson" text="Save Cart" StackPane.alignment="CENTER">
                                                                <StackPane.margin>
                                                                   <Insets bottom="70.0" />
                                                                </StackPane.margin>

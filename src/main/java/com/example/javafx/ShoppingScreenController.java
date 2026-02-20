@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+import com.example.jsonrw.JsonWriter;
 import com.example.pojo.Item;
 import com.example.pojo.Order;
 
@@ -60,8 +61,6 @@ public class ShoppingScreenController extends BaseController {
     @Override
     public void initializeFromDb() {
         fillProductList();
-        //fillSizesComboBox();
-        //fillFinishComboBox();
     }
 
     public void logOut(ActionEvent event) throws Exception {
@@ -111,15 +110,14 @@ public class ShoppingScreenController extends BaseController {
     public void updateComboBoxes() {
         fillSizesComboBox();
         fillFinishComboBox();
-        
-        // THIS I NEED TO REVIEW BUT IT WORKS
+
         sizesComboBox.getSelectionModel().clearSelection();
         sizesComboBox.setValue(null);
 
         finishComboBox.getSelectionModel().clearSelection();
         finishComboBox.setValue(null);
 
-        // FIX: Use prompt-aware button cells
+        // FIX (prompt text not re-loading): Use prompt-aware button cells
         sizesComboBox.setButtonCell(new ListCell<String>() {
             @Override
             protected void updateItem(String item, boolean empty) {
@@ -135,7 +133,6 @@ public class ShoppingScreenController extends BaseController {
                 setText((empty || item == null) ? finishComboBox.getPromptText() : item);
             }
         });
-        // THIS I NEED TO REVIEW BUT IT WORKS
     }
 
     public void placeOrder() {
@@ -159,11 +156,8 @@ public class ShoppingScreenController extends BaseController {
         List<Item> orderItems = newOrder.getItems();
         orderItems.forEach(orderItem -> {
             BigDecimal unitPrice = new BigDecimal(orderItem.getUnitPrice().toString());
-            System.out.println(unitPrice);
             BigDecimal quantity = new BigDecimal(orderItem.getQuantity().toString());
-            System.out.println(quantity);
             subTotal.set(subTotal.get().add(unitPrice.multiply(quantity).setScale(2, RoundingMode.HALF_UP)));
-            System.out.println(subTotal);
         });
 
         vat = subTotal.get().multiply(new BigDecimal(0.21)).setScale(2, RoundingMode.HALF_UP);
@@ -182,6 +176,11 @@ public class ShoppingScreenController extends BaseController {
         receiptElements[3] = "Total: " + newOrder.getTotalCost();
 
         liveReceipt.getItems().setAll(receiptElements);
+    }
+
+    public void exportCartToJson() {
+        JsonWriter jsonWriter = new JsonWriter();
+        jsonWriter.writeToJsonFile(newOrder);
     }
 
 }

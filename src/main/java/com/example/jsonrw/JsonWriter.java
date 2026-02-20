@@ -2,27 +2,25 @@ package com.example.jsonrw;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class JsonWrite {
+public class JsonWriter {
     
     private static ObjectMapper objectMapper = new ObjectMapper();
 
-    public JsonWrite() {
+    public JsonWriter() {
 
     }
-
-    public void writeToJsonFile(Map<String, String> map) {
+        public void writeToJsonFile(Object object) {
         try {
-            objectMapper.writeValue(new File("repotojson.json"), map);
+            objectMapper.writeValue(new File("savedCart.json"), object);
 
         } catch (IOException e) {
             System.out.println("Something went wrong:");
             System.out.println(e.getClass().getSimpleName());
         }
     }
-
+    
 }
 
