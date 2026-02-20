@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+import com.example.jsonrw.JsonReader;
 import com.example.jsonrw.JsonWriter;
 import com.example.pojo.Item;
 import com.example.pojo.Order;
@@ -181,6 +182,15 @@ public class ShoppingScreenController extends BaseController {
     public void exportCartToJson() {
         JsonWriter jsonWriter = new JsonWriter();
         jsonWriter.writeToJsonFile(newOrder);
+    }
+
+    public void importCartFromJson() {
+        JsonReader jsonReader = new JsonReader();
+        Order loadedCart = jsonReader.loadCartFromJsonFile();
+        loadedCart.getItems().forEach(item -> {
+            cartTableView.getItems().add(item);
+        });
+        newOrder = loadedCart;
     }
 
 }

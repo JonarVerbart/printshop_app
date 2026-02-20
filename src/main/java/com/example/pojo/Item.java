@@ -11,6 +11,11 @@ public class Item {
     private Integer quantity;
     private String fullDisplayName;
 
+    // Default constructor for JsonReader
+    public Item() {
+
+    }
+
     public Item(String product, String size, String finish) {
         this.product = product;
         this.size = size;
