@@ -1,5 +1,6 @@
 package com.example.javafx;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
@@ -197,6 +198,10 @@ public class ShoppingScreenController extends BaseController {
             newOrder = loadedCart;
             updateLiveReceipt();
         }
+    }
+
+    public void switchToAccountScreen() throws IOException {
+        SceneManager.switchTo("accountScreen.fxml");
     }
 
 }

@@ -142,6 +142,7 @@
             <Glow />
          </effect>
       </ImageView>
-      <Button alignment="CENTER" layoutX="1206.0" layoutY="14.0" mnemonicParsing="false" onAction="#logOut" prefHeight="60.0" prefWidth="60.0" text="Logout" textAlignment="CENTER" AnchorPane.rightAnchor="14.0" />
+      <Button alignment="CENTER" mnemonicParsing="false" onAction="#switchToAccountScreen" prefHeight="60.0" prefWidth="60.0" text="Account" textAlignment="CENTER" AnchorPane.rightAnchor="92.0" AnchorPane.topAnchor="14.0" />
+      <Button alignment="CENTER" layoutX="1206.0" layoutY="14.0" mnemonicParsing="false" onAction="#logOut" prefHeight="60.0" prefWidth="60.0" text="Logout" textAlignment="CENTER" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0" />
    </children>
 </AnchorPane>
