@@ -1,7 +1,5 @@
 package com.example.pojo;
 
-import java.util.ArrayList;
-
 public class Customer {
     
     private Integer id;
@@ -14,9 +12,6 @@ public class Customer {
     private Integer houseNumber;
     private String postCode;
     private Integer phoneNumber;
-
-    //private ArrayList<Integer> currentOrders;
-    //private ArrayList<Integer> pastOrders;
 
     public Customer(String email, String firstName, String lastName) {
         this.email = email;

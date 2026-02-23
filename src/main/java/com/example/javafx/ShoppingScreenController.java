@@ -180,17 +180,23 @@ public class ShoppingScreenController extends BaseController {
     }
 
     public void exportCartToJson() {
+        FileChooserUtil fileChooser = new FileChooserUtil();
         JsonWriter jsonWriter = new JsonWriter();
-        jsonWriter.writeToJsonFile(newOrder);
+        jsonWriter.writeToJsonFile(newOrder, fileChooser.saveFile(productList.getScene().getWindow(), "JSON File", "*.json"));
     }
 
     public void importCartFromJson() {
+        FileChooserUtil fileChooser = new FileChooserUtil();
         JsonReader jsonReader = new JsonReader();
-        Order loadedCart = jsonReader.loadCartFromJsonFile();
-        loadedCart.getItems().forEach(item -> {
-            cartTableView.getItems().add(item);
-        });
-        newOrder = loadedCart;
+        Order loadedCart = jsonReader.loadCartFromJsonFile(fileChooser.loadFile(productList.getScene().getWindow(), "JSON File", "*.json"));
+        if (loadedCart != null && loadedCart instanceof Order) {
+            cartTableView.getItems().clear();
+            loadedCart.getItems().forEach(item -> {
+                cartTableView.getItems().add(item);
+            });
+            newOrder = loadedCart;
+            updateLiveReceipt();
+        }
     }
 
 }

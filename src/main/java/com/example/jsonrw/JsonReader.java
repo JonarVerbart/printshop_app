@@ -10,9 +10,9 @@ public class JsonReader {
 
     private static ObjectMapper objectMapper = new ObjectMapper();
     
-    public Order loadCartFromJsonFile() {
+    public Order loadCartFromJsonFile(File jsonFile) {
         try {
-            return objectMapper.readValue(new File("savedCart.json"), Order.class);
+            return objectMapper.readValue(jsonFile, Order.class);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }

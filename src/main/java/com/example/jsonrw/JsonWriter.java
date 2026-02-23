@@ -12,9 +12,9 @@ public class JsonWriter {
     public JsonWriter() {
 
     }
-        public void writeToJsonFile(Object object) {
+        public void writeToJsonFile(Object object, File jsonFile) {
         try {
-            objectMapper.writeValue(new File("savedCart.json"), object);
+            objectMapper.writeValue(jsonFile, object);
 
         } catch (IOException e) {
             System.out.println("Something went wrong:");

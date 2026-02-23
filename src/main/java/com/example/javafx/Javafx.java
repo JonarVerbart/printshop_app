@@ -5,6 +5,8 @@
 
 package com.example.javafx;
 
+import com.example.constants.Constants;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -18,9 +20,13 @@ public class Javafx extends Application{
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
-                SceneManager.clearOrderItemTable();
-                SceneManager.clearOrdersTable();
-                SceneManager.clearItemsTable();
+                if (Constants.CLEAR_ORDERS) {
+                    SceneManager.clearOrderItemTable();
+                    SceneManager.clearOrdersTable();
+                }
+                if (Constants.CLEAR_ITEMS) {
+                    SceneManager.clearItemsTable();
+                }
                 System.out.println("Application has shut down");
             } catch (Exception e) {
                 e.getMessage();
