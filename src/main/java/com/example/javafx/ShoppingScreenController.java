@@ -146,7 +146,7 @@ public class ShoppingScreenController extends BaseController {
 
         List<Item> orderItems = newOrder.getItems();
         orderItems.forEach(orderItem -> {
-            dbInterface.insertOrderItem(newOrder.getId(), orderItem.getId(), orderItem.getQuantity());
+            dbInterface.insertOrderItem(newOrder.getId(), orderItem.getId(), orderItem.getQuantity(), orderItem.getUnitPrice(), orderItem.getFullDisplayName());
         } );
         System.out.println("Order was placed");
     }

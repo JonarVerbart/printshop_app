@@ -34,14 +34,4 @@ public class Javafx extends Application{
         }));
     }
 
-    /*
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("loginScreen.fxml"));
-        Scene scene = new Scene(root);
-        primaryStage.setTitle("PhotoShop Store");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
-    */
 }
