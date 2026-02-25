@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import com.example.pojo.TreeRowModel;
+import com.example.util.OrderStatusProcessor;
 import com.example.util.TimestampFormatter;
 
 import javafx.event.ActionEvent;
@@ -64,6 +65,7 @@ public class accountScreenController extends BaseController {
 
     public void fillOrderTable() {
         TimestampFormatter timestampFormatter = new TimestampFormatter();
+        OrderStatusProcessor orderStatusProcessor = new OrderStatusProcessor();
         
         List<TreeRowModel> orderData = dbInterface.retrieveAllCustomerOrders(loggedCustomer.getEmail());
         List<TreeRowModel> orderItemData = dbInterface.retrieveAllCustomerOrderItems(loggedCustomer.getEmail());
@@ -74,7 +76,7 @@ public class accountScreenController extends BaseController {
             TreeRowModel orderRow = new TreeRowModel();
             orderRow.orderIdProperty().set("Order #: " + orderData.get(i).orderIdProperty().getValue());
             orderRow.localDateTimePlaced().set(timestampFormatter.timestampToLocalDateTime(orderData.get(i).timestampPlacedProperty().getValue()));
-            orderRow.statusProperty().set(orderData.get(i).statusProperty().get());
+            orderRow.statusProperty().set(orderStatusProcessor.getStatusDisplayName(orderData.get(i).statusProperty().get()));
             orderRow.pickupTimeProperty().set(orderData.get(i).pickupTimeProperty().getValue());
             orderRow.subtotalProperty().set(orderData.get(i).subtotalProperty().get());
             orderRow.vatProperty().set(orderData.get(i).vatProperty().get());

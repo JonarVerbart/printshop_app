@@ -36,7 +36,7 @@ public class Order {
     private BigDecimal totalVAT;
     private BigDecimal totalCost;
 
-    private boolean orderClosed;
+    private Integer status;
 
 
     public void addItem(Item item) {
@@ -111,19 +111,12 @@ public class Order {
         this.totalCost = totalCost;
     }
 
-    public boolean isOrderClosed() {
-        return this.orderClosed;
+    public Integer getStatus() {
+        return this.status;
     }
 
-    public boolean getOrderClosed() {
-        return this.orderClosed;
+    public void setStatus(Integer status) {
+        this.status = status;
     }
-
-    public void setOrderClosed(boolean orderClosed) {
-        this.orderClosed = orderClosed;
-    }
-
-    
-
 
 }

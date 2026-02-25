@@ -318,7 +318,7 @@ public class DbInterface {
     public void insertOrder(Order order) {
         try {
         String sqlQuery = """
-                INSERT INTO orders (customer_id, order_placed, sub_total_cost, total_VAT, total_cost, order_closed)
+                INSERT INTO orders (customer_id, order_placed, sub_total_cost, total_VAT, total_cost, order_status)
                 VALUES (?, ?, ?, ?, ?, ?)
                 """;
 
@@ -329,7 +329,7 @@ public class DbInterface {
                 ps.setBigDecimal(3, order.getSubTotalCost());
                 ps.setBigDecimal(4, order.getTotalVAT());
                 ps.setBigDecimal(5, order.getTotalCost());
-                ps.setBoolean(6, order.getOrderClosed());
+                ps.setInt(6, order.getStatus());
 
                 ps.executeUpdate();
 
@@ -348,7 +348,7 @@ public class DbInterface {
     public List<TreeRowModel> retrieveAllCustomerOrderItems(String email) {
         try {
         String sqlQuery = """
-                SELECT c.id customer_id, email, o.id order_id, order_placed, pickup_time, sub_total_cost, total_VAT, total_cost, order_closed, item_id, quantity, unit_price_at_order_placed, full_display_name 
+                SELECT c.id customer_id, email, o.id order_id, order_placed, pickup_time, sub_total_cost, total_VAT, total_cost, order_status, item_id, quantity, unit_price_at_order_placed, full_display_name 
                 FROM customers c 
                 JOIN orders o on c.id = o.customer_id 
                 JOIN order_item oi on oi.order_id = o.id 
@@ -364,15 +364,15 @@ public class DbInterface {
                     ps.setString(1, email);
                     try (ResultSet rs = ps.executeQuery()) {
                         while (rs.next()) {
-                        Integer customerId = rs.getInt("customer_id");
+                        //Integer customerId = rs.getInt("customer_id");
                         Integer orderId = rs.getInt("order_id");
                         Timestamp orderPlaced = rs.getTimestamp("order_placed");
                         Timestamp pickupTime = rs.getTimestamp("pickup_time");
                         BigDecimal subtotal = rs.getBigDecimal("sub_total_cost");
                         BigDecimal totalVat = rs.getBigDecimal("total_VAT");
                         BigDecimal totalCost = rs.getBigDecimal("total_cost");
-                        Boolean orderClosed = rs.getBoolean("order_closed");
-                        Integer itemId = rs.getInt("item_id");
+                        Integer orderStatus = rs.getInt("order_status");
+                        //Integer itemId = rs.getInt("item_id");
                         Integer quantity = rs.getInt("quantity");
                         BigDecimal unitPriceAtOrderPlaced = rs.getBigDecimal("unit_price_at_order_placed");
                         String fullDisplayName = rs.getString("full_display_name");
@@ -381,7 +381,7 @@ public class DbInterface {
                         treeRowModel.orderIdProperty().set(orderId.toString());
                         treeRowModel.fullDisplayNameProperty().set(fullDisplayName);
                         treeRowModel.timestampPlacedProperty().set(orderPlaced);
-                        treeRowModel.statusProperty().set(orderClosed.toString());
+                        treeRowModel.statusProperty().set(orderStatus.toString());
                         treeRowModel.pickupTimeProperty().set(pickupTime);
                         treeRowModel.unitPriceProperty().set(unitPriceAtOrderPlaced);
                         treeRowModel.quantityProperty().set(quantity);
@@ -390,25 +390,6 @@ public class DbInterface {
                         treeRowModel.totalCostProperty().set(totalCost);
 
                         treeRowList.add(treeRowModel);
-                        
-                        System.out.println("\n--------Table row----------\n");
-                        System.out.println(customerId);
-                        System.out.println(orderId);
-                        System.out.println(orderPlaced);
-                        System.out.println(pickupTime);
-                        System.out.println(subtotal);
-                        System.out.println(totalVat);
-                        System.out.println(totalCost);
-                        System.out.println(orderClosed);
-                        System.out.println(itemId);
-                        System.out.println(quantity);
-                        System.out.println(unitPriceAtOrderPlaced);
-                        System.out.println(fullDisplayName + "\n");
-
-                        
-                        
-                        // Item item = new Item(id, product, size, finish, unitPrice, completionTime);
-                        // return item;
                         }
                         return treeRowList;
                     }
@@ -422,7 +403,7 @@ public class DbInterface {
     public List<TreeRowModel> retrieveAllCustomerOrders(String email) {
 try {
         String sqlQuery = """
-                SELECT c.id customer_id, email, o.id order_id, order_placed, pickup_time, sub_total_cost, total_VAT, total_cost, order_closed 
+                SELECT c.id customer_id, email, o.id order_id, order_placed, pickup_time, sub_total_cost, total_VAT, total_cost, order_status 
                 FROM customers c 
                 JOIN orders o on c.id = o.customer_id
                 WHERE email = ?
@@ -444,12 +425,12 @@ try {
                         BigDecimal subtotal = rs.getBigDecimal("sub_total_cost");
                         BigDecimal totalVat = rs.getBigDecimal("total_VAT");
                         BigDecimal totalCost = rs.getBigDecimal("total_cost");
-                        Boolean orderClosed = rs.getBoolean("order_closed");
+                        Integer orderStatus = rs.getInt("order_status");
  
                         treeRowModel = new TreeRowModel();
                         treeRowModel.orderIdProperty().set(orderId.toString());
                         treeRowModel.timestampPlacedProperty().set(orderPlaced);
-                        treeRowModel.statusProperty().set(orderClosed.toString());
+                        treeRowModel.statusProperty().set(orderStatus.toString());
                         treeRowModel.pickupTimeProperty().set(pickupTime);
                         treeRowModel.subtotalProperty().set(subtotal);
                         treeRowModel.vatProperty().set(totalVat);

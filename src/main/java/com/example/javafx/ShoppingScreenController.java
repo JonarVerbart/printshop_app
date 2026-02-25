@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.example.jsonrw.JsonReader;
@@ -139,7 +140,8 @@ public class ShoppingScreenController extends BaseController {
 
     public void placeOrder() {
         newOrder.setCustomerId(loggedCustomer.getId());
-        newOrder.setOrderClosed(false);
+        Integer randomStatus = new Random().nextInt(7);
+        newOrder.setStatus(randomStatus);
         newOrder.setOrderPlacedTimestamp(new Timestamp(System.currentTimeMillis()));
 
         dbInterface.insertOrder(newOrder);
@@ -149,6 +151,9 @@ public class ShoppingScreenController extends BaseController {
             dbInterface.insertOrderItem(newOrder.getId(), orderItem.getId(), orderItem.getQuantity(), orderItem.getUnitPrice(), orderItem.getFullDisplayName());
         } );
         System.out.println("Order was placed");
+        cartTableView.getItems().clear();
+        newOrder = new Order();
+        liveReceipt.getItems().setAll("Your order was placed succesfully!", "Your items will be ready to pick up at: DateTime", "You can view the status and order details in your account.", "", "Thank you for ordering at PhotoShop photoshop. It's the best PhotoShop.");
     }
 
     public void updateOrderCosts() {
