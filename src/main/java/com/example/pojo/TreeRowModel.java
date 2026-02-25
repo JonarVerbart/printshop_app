@@ -10,8 +10,10 @@ import javafx.beans.property.StringProperty;
 
 public class TreeRowModel {
     
-    private final StringProperty order = new SimpleStringProperty();
-    private final ObjectProperty<Timestamp> date = new SimpleObjectProperty<>();
+    private final StringProperty orderId = new SimpleStringProperty();
+    private final StringProperty fullDisplayName = new SimpleStringProperty();
+    private final ObjectProperty<Timestamp> timestampPlaced = new SimpleObjectProperty<>();
+    private final StringProperty localDateTimePlaced = new SimpleStringProperty();
     private final StringProperty status = new SimpleStringProperty();
     private final ObjectProperty<Timestamp> pickupTime = new SimpleObjectProperty<>();
     private final ObjectProperty<BigDecimal> unitPrice = new SimpleObjectProperty<>();
@@ -21,15 +23,21 @@ public class TreeRowModel {
     private final ObjectProperty<BigDecimal> totalCost = new SimpleObjectProperty<>();
 
 
-    public StringProperty orderProperty() {
-        return this.order;
+    public StringProperty orderIdProperty() {
+        return this.orderId;
     }
 
-
-    public ObjectProperty<Timestamp> dateProperty() {
-        return this.date;
+    public StringProperty fullDisplayNameProperty() {
+        return this.fullDisplayName;
     }
 
+    public ObjectProperty<Timestamp> timestampPlacedProperty() {
+        return this.timestampPlaced;
+    }
+
+    public StringProperty localDateTimePlaced() {
+        return this.localDateTimePlaced;
+    }
 
     public StringProperty statusProperty() {
         return this.status;

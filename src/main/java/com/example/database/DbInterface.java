@@ -378,8 +378,9 @@ public class DbInterface {
                         String fullDisplayName = rs.getString("full_display_name");
  
                         treeRowModel = new TreeRowModel();
-                        treeRowModel.orderProperty().set(fullDisplayName);
-                        treeRowModel.dateProperty().set(orderPlaced);
+                        treeRowModel.orderIdProperty().set(orderId.toString());
+                        treeRowModel.fullDisplayNameProperty().set(fullDisplayName);
+                        treeRowModel.timestampPlacedProperty().set(orderPlaced);
                         treeRowModel.statusProperty().set(orderClosed.toString());
                         treeRowModel.pickupTimeProperty().set(pickupTime);
                         treeRowModel.unitPriceProperty().set(unitPriceAtOrderPlaced);
@@ -446,15 +447,14 @@ try {
                         Boolean orderClosed = rs.getBoolean("order_closed");
  
                         treeRowModel = new TreeRowModel();
-                        treeRowModel.orderProperty().set(orderId.toString());
-                        treeRowModel.dateProperty().set(orderPlaced);
+                        treeRowModel.orderIdProperty().set(orderId.toString());
+                        treeRowModel.timestampPlacedProperty().set(orderPlaced);
                         treeRowModel.statusProperty().set(orderClosed.toString());
                         treeRowModel.pickupTimeProperty().set(pickupTime);
                         treeRowModel.subtotalProperty().set(subtotal);
                         treeRowModel.vatProperty().set(totalVat);
                         treeRowModel.totalCostProperty().set(totalCost);
 
-                        System.out.println("Is the bus still runnin?");
                         treeRowList.add(treeRowModel);
                         }
                         return treeRowList;

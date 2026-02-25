@@ -1,10 +1,13 @@
 package com.example.javafx;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.List;
 
 import com.example.pojo.TreeRowModel;
+import com.example.util.TimestampFormatter;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,7 +22,7 @@ public class accountScreenController extends BaseController {
     @FXML
     private TreeTableColumn<TreeRowModel, String> orderTreeTableColumn;
     @FXML
-    private TreeTableColumn<TreeRowModel, Timestamp> dateTreeTableColumn;
+    private TreeTableColumn<TreeRowModel, String> dateTreeTableColumn;
     @FXML
     private TreeTableColumn<TreeRowModel, String> statusTreeTableColumn;
     @FXML
@@ -37,9 +40,8 @@ public class accountScreenController extends BaseController {
 
     @FXML
     public void initialize() {
-
-        orderTreeTableColumn.setCellValueFactory(param -> param.getValue().getValue().orderProperty());
-        dateTreeTableColumn.setCellValueFactory(param -> param.getValue().getValue().dateProperty());
+        orderTreeTableColumn.setCellValueFactory(param -> param.getValue().getValue().orderIdProperty());
+        dateTreeTableColumn.setCellValueFactory(param -> param.getValue().getValue().localDateTimePlaced());
         statusTreeTableColumn.setCellValueFactory(param -> param.getValue().getValue().statusProperty());
         pickupTimeTreeTableColumn.setCellValueFactory(param -> param.getValue().getValue().pickupTimeProperty());
         unitPriceTreeTableColumn.setCellValueFactory(param -> param.getValue().getValue().unitPriceProperty());
@@ -47,39 +49,11 @@ public class accountScreenController extends BaseController {
         subtotalTreeTableColumn.setCellValueFactory(param -> param.getValue().getValue().subtotalProperty());
         vatTreeTableColumn.setCellValueFactory(param -> param.getValue().getValue().vatProperty());
         totalCostTreeTableColumn.setCellValueFactory(param -> param.getValue().getValue().totalCostProperty());
-
     }
 
     @Override
     public void initializeFromDb() {
-
-        //dbInterface.retrieveAllCustomerOrders(loggedCustomer.getEmail());
         fillOrderTable();
-        /*
-        TreeItem<TreeRowModel> treeRoot = new TreeItem<>(new TreeRowModel());
-        
-        
-        for (int i = 0; i < 3; i++) {
-            
-            TreeRowModel orderRow = new TreeRowModel();
-            orderRow.orderProperty().set("Test product " + i);
-            orderRow.dateProperty().set(new Timestamp(System.currentTimeMillis()));
-
-            TreeItem<TreeRowModel> orderItem = new TreeItem<>(orderRow);
-
-            for (int j = 0; j < 2; j++) {
-                TreeRowModel item = new TreeRowModel();
-                item.quantityProperty().set(69 + j);
-                item.statusProperty().set("Highest status");
-
-                orderItem.getChildren().add(new TreeItem<>(item));
-            }
-            treeRoot.getChildren().add(orderItem);
-        }
-        ordersTreeTableView.setShowRoot(false);
-        ordersTreeTableView.setRoot(treeRoot);
-        treeRoot.getChildren().getFirst().setExpanded(true);
-        */
     }
 
     public void logOut(ActionEvent event) throws Exception {
@@ -89,39 +63,50 @@ public class accountScreenController extends BaseController {
     }
 
     public void fillOrderTable() {
+        TimestampFormatter timestampFormatter = new TimestampFormatter();
+        
         List<TreeRowModel> orderData = dbInterface.retrieveAllCustomerOrders(loggedCustomer.getEmail());
         List<TreeRowModel> orderItemData = dbInterface.retrieveAllCustomerOrderItems(loggedCustomer.getEmail());
-        //List<TreeRowModel> orderData = 
 
         TreeItem<TreeRowModel> treeRoot = new TreeItem<>(new TreeRowModel());
         
         for (int i = 0; i < orderData.size(); i++) {
             TreeRowModel orderRow = new TreeRowModel();
-            orderRow.orderProperty().set("Order# " + orderData.get(i).orderProperty().get());
-            orderRow.dateProperty().set(orderData.get(i).dateProperty().getValue());
+            orderRow.orderIdProperty().set("Order #: " + orderData.get(i).orderIdProperty().getValue());
+            orderRow.localDateTimePlaced().set(timestampFormatter.timestampToLocalDateTime(orderData.get(i).timestampPlacedProperty().getValue()));
             orderRow.statusProperty().set(orderData.get(i).statusProperty().get());
             orderRow.pickupTimeProperty().set(orderData.get(i).pickupTimeProperty().getValue());
             orderRow.subtotalProperty().set(orderData.get(i).subtotalProperty().get());
             orderRow.vatProperty().set(orderData.get(i).vatProperty().get());
             orderRow.totalCostProperty().set(orderData.get(i).totalCostProperty().get());
 
+            TreeItem<TreeRowModel> orderParent = new TreeItem<>(orderRow);
 
-            TreeItem<TreeRowModel> orderItem = new TreeItem<>(orderRow);
-            // BUG: Every order gets all items from all orders
             for (int j = 0; j < orderItemData.size(); j++) {
-                TreeRowModel itemRow = new TreeRowModel();
-                itemRow.orderProperty().set(orderItemData.get(j).orderProperty().get());
-                itemRow.pickupTimeProperty().set(orderItemData.get(j).pickupTimeProperty().getValue());
-                itemRow.unitPriceProperty().set(orderItemData.get(j).unitPriceProperty().get());
-                itemRow.quantityProperty().set(orderItemData.get(j).quantityProperty().get());
+                if (orderData.get(i).orderIdProperty().getValue().equals(orderItemData.get(j).orderIdProperty().getValue())) {
+                    TreeRowModel itemRow = new TreeRowModel();
+                    itemRow.orderIdProperty().set(orderItemData.get(j).fullDisplayNameProperty().get());
+                    itemRow.pickupTimeProperty().set(orderItemData.get(j).pickupTimeProperty().getValue());
+                    itemRow.unitPriceProperty().set(orderItemData.get(j).unitPriceProperty().get());
+                    itemRow.quantityProperty().set(orderItemData.get(j).quantityProperty().get());
 
-                orderItem.getChildren().add(new TreeItem<>(itemRow));
+                    BigDecimal unitPrice = orderItemData.get(j).unitPriceProperty().get();
+                    BigDecimal quantity = new BigDecimal(orderItemData.get(j).quantityProperty().get().toString());
+                    BigDecimal combinedUnitPrice = unitPrice.multiply(quantity).setScale(2, RoundingMode.HALF_UP);
+                    itemRow.subtotalProperty().set(combinedUnitPrice);
+
+                    orderParent.getChildren().add(new TreeItem<>(itemRow));
+                }
             }
-            treeRoot.getChildren().add(orderItem);
+            treeRoot.getChildren().add(orderParent);
         }
         ordersTreeTableView.setShowRoot(false);
         ordersTreeTableView.setRoot(treeRoot);
         treeRoot.getChildren().getFirst().setExpanded(true);
+    }
+
+    public void switchToShoppingScreen() throws IOException{
+        SceneManager.switchTo("shoppingScreen.fxml");
     }
     
 }
