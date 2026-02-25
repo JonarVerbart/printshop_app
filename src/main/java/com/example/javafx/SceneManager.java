@@ -26,7 +26,6 @@ public class SceneManager {
         stage = primaryStage;
         ConnProvider conn = new ConnProvider();
         dbInterface = new DbInterface(conn.getDataSource());
-        
     }
 
     public static void inventoryCsvToDb() {
