@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -132,7 +133,7 @@ public class DbInterface {
 
     public void insertItem(Item item) throws SQLException {
         String sqlQuery = """
-                INSERT INTO items (product, size, finish, unit_price, completion_time)
+                INSERT INTO items (product, size, finish, unit_price, completion_time_seconds)
                 VALUES (?, ?, ?, ?, ?)
                 """;
 
@@ -142,7 +143,7 @@ public class DbInterface {
                 ps.setString(2, item.getSize());
                 ps.setString(3, item.getFinish());
                 ps.setString(4, item.getUnitPrice());
-                ps.setString(5, item.getCompletionTime());
+                ps.setLong(5, item.getCompletionTime().getSeconds());
 
                 ps.executeUpdate();
 
@@ -157,7 +158,7 @@ public class DbInterface {
     public Item retrieveItem(String product, String size, String finish) {
         try {
         String sqlQuery = """
-                SELECT id, product, size, finish, unit_price, completion_time
+                SELECT id, product, size, finish, unit_price, completion_time_seconds
                 FROM items
                 WHERE product = ? and size = ? and finish = ?
                 """;
@@ -172,7 +173,8 @@ public class DbInterface {
                         if (rs.next()) {
                         Integer id = rs.getInt("id");
                         String unitPrice = rs.getString("unit_price");
-                        String completionTime = rs.getString("completion_time");
+                        Long completionTimeLong = rs.getLong("completion_time_seconds");
+                        Duration completionTime = Duration.ofSeconds(completionTimeLong);
                             Item item = new Item(id, product, size, finish, unitPrice, completionTime);
                             return item;
                         }
@@ -191,12 +193,11 @@ public class DbInterface {
         String sqlQuery2 = """
         ALTER TABLE order_item AUTO_INCREMENT = 1
         """;
-
+        
         try (Connection conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
                 ps.executeUpdate();
             }
-        
         try (Connection conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sqlQuery2)) {
                 ps.executeUpdate();
@@ -223,20 +224,39 @@ public class DbInterface {
     }
 
     public void clearItemsTable() throws SQLException {
-        String sqlQuery = """
-        DELETE from items WHERE id between 1 and 10000
+        String sqlQuery1 = """
+        ALTER TABLE order_item
+        DROP FOREIGN KEY FK_OrderItem_Items, DROP INDEX FK_OrderItem_Items
         """;
         String sqlQuery2 = """
+        DELETE from items WHERE id between 1 and 10000
+        """;
+        String sqlQuery3 = """
         ALTER TABLE items AUTO_INCREMENT = 1
         """;
+        
 
         try (Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
+            PreparedStatement ps = conn.prepareStatement(sqlQuery1)) {
+                ps.executeUpdate();
+            }
+        try (Connection conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sqlQuery2)) {
+                ps.executeUpdate();
+            }
+        try (Connection conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sqlQuery3)) {
                 ps.executeUpdate();
             }
         
+    }
+
+    public void addFkOrderItemItems() throws SQLException {
+        String sqlQuery1 = """
+        alter table order_item add constraint FK_OrderItem_Items foreign key(item_id) references items(id)
+        """;
         try (Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sqlQuery2)) {
+            PreparedStatement ps = conn.prepareStatement(sqlQuery1)) {
                 ps.executeUpdate();
             }
     }
@@ -318,18 +338,19 @@ public class DbInterface {
     public void insertOrder(Order order) {
         try {
         String sqlQuery = """
-                INSERT INTO orders (customer_id, order_placed, sub_total_cost, total_VAT, total_cost, order_status)
-                VALUES (?, ?, ?, ?, ?, ?)
+                INSERT INTO orders (customer_id, order_placed, total_completion_time_seconds, sub_total_cost, total_VAT, total_cost, order_status)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
                 """;
 
                 try(Connection conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setInt(1, order.getCustomerId());
                 ps.setTimestamp(2, order.getOrderPlacedTimestamp());
-                ps.setBigDecimal(3, order.getSubTotalCost());
-                ps.setBigDecimal(4, order.getTotalVAT());
-                ps.setBigDecimal(5, order.getTotalCost());
-                ps.setInt(6, order.getStatus());
+                ps.setLong(3, order.getTotalCompletionTime().toSeconds());
+                ps.setBigDecimal(4, order.getSubTotalCost());
+                ps.setBigDecimal(5, order.getTotalVAT());
+                ps.setBigDecimal(6, order.getTotalCost());
+                ps.setInt(7, order.getStatus());
 
                 ps.executeUpdate();
 

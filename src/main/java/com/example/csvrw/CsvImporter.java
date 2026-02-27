@@ -3,14 +3,17 @@ package com.example.csvrw;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.example.constants.Constants;
 import com.example.database.DbInterface;
 import com.example.pojo.Item;
+import com.example.util.TimeFormatHandler;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 
@@ -23,6 +26,8 @@ public class CsvImporter {
     }
     
     public void inventoryCsvToDb() {
+
+        TimeFormatHandler timeFormatHandler = new TimeFormatHandler();
 
         List<List<String>> inventory = new ArrayList<List<String>>();
         try(CSVReader csvReader = new CSVReader(new FileReader("src/main/resources/inventory_expanded_nobom_redacted.csv"));) {
@@ -41,15 +46,22 @@ public class CsvImporter {
             line = line.replace("[", "").replace("]", "");
             String[] parts = line.split(";");
 
-            Item item = new Item(parts[1], parts[2], parts[3], parts[4], parts[5]);
+            Long completionTimeLong = timeFormatHandler.parseHHmmToSeconds(parts[5]);
+            Duration completionTime = Duration.ofSeconds(completionTimeLong);
+
+            Item item = new Item(parts[1], parts[2], parts[3], parts[4], completionTime);
             try {
                 dbInterface.insertItem(item);
             } catch (SQLException e) {
                 e.getMessage();
             }
-
         });
-    }
+        try {
+            dbInterface.addFkOrderItemItems();
+        } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+}
 
     public Map<String, Map<String, String>> getOpeningHoursFromCSV() {
         List<List<String>> openingHours = new ArrayList<List<String>>();

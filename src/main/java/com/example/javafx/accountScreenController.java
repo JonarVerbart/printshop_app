@@ -8,7 +8,7 @@ import java.util.List;
 
 import com.example.pojo.TreeRowModel;
 import com.example.util.OrderStatusProcessor;
-import com.example.util.TimestampFormatter;
+import com.example.util.TimeFormatHandler;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -64,7 +64,7 @@ public class accountScreenController extends BaseController {
     }
 
     public void fillOrderTable() {
-        TimestampFormatter timestampFormatter = new TimestampFormatter();
+        TimeFormatHandler timeFormatHandler = new TimeFormatHandler();
         OrderStatusProcessor orderStatusProcessor = new OrderStatusProcessor();
         
         List<TreeRowModel> orderData = dbInterface.retrieveAllCustomerOrders(loggedCustomer.getEmail());
@@ -75,7 +75,7 @@ public class accountScreenController extends BaseController {
         for (int i = 0; i < orderData.size(); i++) {
             TreeRowModel orderRow = new TreeRowModel();
             orderRow.orderIdProperty().set("Order #: " + orderData.get(i).orderIdProperty().getValue());
-            orderRow.localDateTimePlaced().set(timestampFormatter.timestampToLocalDateTime(orderData.get(i).timestampPlacedProperty().getValue()));
+            orderRow.localDateTimePlaced().set(timeFormatHandler.timestampToLocalDateTime(orderData.get(i).timestampPlacedProperty().getValue()));
             orderRow.statusProperty().set(orderStatusProcessor.getStatusDisplayName(orderData.get(i).statusProperty().get()));
             orderRow.pickupTimeProperty().set(orderData.get(i).pickupTimeProperty().getValue());
             orderRow.subtotalProperty().set(orderData.get(i).subtotalProperty().get());

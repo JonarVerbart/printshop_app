@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
@@ -12,6 +13,7 @@ import com.example.jsonrw.JsonReader;
 import com.example.jsonrw.JsonWriter;
 import com.example.pojo.Item;
 import com.example.pojo.Order;
+import com.example.util.PickupTimeCalculator;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -47,6 +49,7 @@ public class ShoppingScreenController extends BaseController {
     private TableColumn<Item, String> unitPriceColumn;
 
     Order newOrder;
+    PickupTimeCalculator pickupTimeCalculator = new PickupTimeCalculator();
 
     @FXML
     public void initialize() {
@@ -85,6 +88,14 @@ public class ShoppingScreenController extends BaseController {
             cartTableView.getItems().add(cartItem);
 
             newOrder.addItem(cartItem);
+
+            Duration totalCompletionTime = Duration.ofSeconds(0);
+            for (var item : newOrder.getItems()) {
+                totalCompletionTime = totalCompletionTime.plus(item.getCompletionTime());
+            };
+            newOrder.setTotalCompletionTime(totalCompletionTime);
+            newOrder.setPickupTime(pickupTimeCalculator.calculatePickupTime(newOrder).toLocalDateTime());
+            System.out.println(newOrder.getPickupTime());
 
             updateOrderCosts();
             updateLiveReceipt();
@@ -153,7 +164,7 @@ public class ShoppingScreenController extends BaseController {
         System.out.println("Order was placed");
         cartTableView.getItems().clear();
         newOrder = new Order();
-        liveReceipt.getItems().setAll("Your order was placed succesfully!", "Your items will be ready to pick up at: DateTime", "You can view the status and order details in your account.", "", "Thank you for ordering at PhotoShop photoshop. It's the best PhotoShop.");
+        liveReceipt.getItems().setAll("Your order was placed succesfully!", "Your items will be ready to pick up at: DateTime", "You can view the status and order details in your account.", "", "Thank you for ordering at PhotoShop photoshop.", "It's the best photoshop.");
     }
 
     public void updateOrderCosts() {

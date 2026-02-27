@@ -2,6 +2,8 @@ package com.example.pojo;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,8 +31,8 @@ public class Order {
     // private ArrayList<String> itemsFullName;
 
     private Timestamp orderPlacedTimestamp;
-    private Timestamp pickupTime;
-    private String totalCompletionTime;
+    private LocalDateTime pickupTime;
+    private Duration totalCompletionTime;
 
     private BigDecimal subTotalCost;
     private BigDecimal totalVAT;
@@ -71,19 +73,19 @@ public class Order {
         this.orderPlacedTimestamp = orderPlacedTimestamp;
     }
 
-    public Timestamp getPickupTime() {
+    public LocalDateTime getPickupTime() {
         return this.pickupTime;
     }
 
-    public void setPickupTime(Timestamp pickupTime) {
+    public void setPickupTime(LocalDateTime pickupTime) {
         this.pickupTime = pickupTime;
     }
 
-    public String getTotalCompletionTime() {
+    public Duration getTotalCompletionTime() {
         return this.totalCompletionTime;
     }
 
-    public void setTotalCompletionTime(String totalCompletionTime) {
+    public void setTotalCompletionTime(Duration totalCompletionTime) {
         this.totalCompletionTime = totalCompletionTime;
     }
 

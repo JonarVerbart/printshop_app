@@ -16,8 +16,9 @@ public class Javafx extends Application{
     public void start(Stage primaryStage) throws Exception {
         SceneManager.init(primaryStage);
         SceneManager.switchTo("loginScreen.fxml");
-        SceneManager.inventoryCsvToDb();
-
+        if (Constants.LOAD_ITEMS) {
+            SceneManager.inventoryCsvToDb();
+        }
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
                 if (Constants.CLEAR_ORDERS) {
