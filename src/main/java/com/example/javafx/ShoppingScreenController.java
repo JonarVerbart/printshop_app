@@ -91,7 +91,7 @@ public class ShoppingScreenController extends BaseController {
 
             Duration totalCompletionTime = Duration.ofSeconds(0);
             for (var item : newOrder.getItems()) {
-                totalCompletionTime = totalCompletionTime.plus(item.getCompletionTime());
+                totalCompletionTime = totalCompletionTime.plus(item.getCompletionTime().multipliedBy(item.getQuantity()));
             };
             newOrder.setTotalCompletionTime(totalCompletionTime);
             newOrder.setPickupTime(pickupTimeCalculator.calculatePickupTime(newOrder).toLocalDateTime());
@@ -187,11 +187,13 @@ public class ShoppingScreenController extends BaseController {
     }
 
     public void updateLiveReceipt() {
-        String[] receiptElements = new String[4];
+        String[] receiptElements = new String[6];
         receiptElements[0] = "Subtotal: " + newOrder.getSubTotalCost();
         receiptElements[1] = "21% VAT: " + newOrder.getTotalVAT();
         receiptElements[2] = "----------------------------- +";
         receiptElements[3] = "Total: " + newOrder.getTotalCost();
+        receiptElements[4] = "";
+        receiptElements[5] = "Pickup time: " + newOrder.getPickupTime();
 
         liveReceipt.getItems().setAll(receiptElements);
     }

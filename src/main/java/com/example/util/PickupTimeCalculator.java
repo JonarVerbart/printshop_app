@@ -55,7 +55,8 @@ public class PickupTimeCalculator {
             completionDurationLeft = completionDurationLeft.minus(nowTillClosingToday);
             int i = 1;
             while (true) {
-                    // There is a bug happening here, maybe when pcikup time is after closing time of order date.
+                    // PROBABLY FIXED:There is a bug happening here, maybe when pcikup time is after closing time of order date. More likely: quantity not taken into account.
+                    // BUG: Sunday is now probably interpreted as 24h of opening time instead of being closed the entire day. Can use different notation in CSV if easier.
                     System.out.println(utcDayOfWeekNow.plus(i).toString().charAt(0) + utcDayOfWeekNow.plus(i).toString().substring(1).toLowerCase());
                     todaysOpeningHourMinute = openingHours.get(utcDayOfWeekNow.plus(i).toString().charAt(0) + utcDayOfWeekNow.plus(i).toString().substring(1).toLowerCase()).get("openFrom").split(":");
                     todaysOpeningHour = Integer.parseInt(todaysOpeningHourMinute[0]);
@@ -73,6 +74,7 @@ public class PickupTimeCalculator {
                         ZonedDateTime pickupTime = utcDateTimeNow.withHour(todaysOpeningHour).withMinute(todaysOpeningMinute).plusDays(i).plus(completionDurationLeft);
                         return pickupTime;
                     } else {
+                        completionDurationLeft = completionDurationLeft.minus(openTillCloseToday);
                         i++;
                     }
                 }
