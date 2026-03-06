@@ -41,7 +41,9 @@ public class PickupTimeCalculator {
         Duration openTillCloseToday;
 
         if (completionDurationLeft.minus(nowTillClosingToday).isNegative()) {
-            ZonedDateTime pickupTime = utcDateTimeNow.plus(nowTillClosingToday.plus(completionDurationLeft));
+            ZonedDateTime pickupTime = utcDateTimeNow.plus(completionDurationLeft);
+            System.out.println("Now till closing today: " + nowTillClosingToday);
+            System.out.println("Can be picked up same day at: ");
             return pickupTime;
         } else {
             completionDurationLeft = completionDurationLeft.minus(nowTillClosingToday);
@@ -63,7 +65,7 @@ public class PickupTimeCalculator {
 
                     if (completionDurationLeft.minus(openTillCloseToday).isNegative()) {
                         ZonedDateTime pickupTime = utcDateTimeNow.withHour(todaysOpeningHour).withMinute(todaysOpeningMinute).plusDays(i).plus(completionDurationLeft);
-                        System.out.println("Completion time left in seconds (Add to opening time of pcikup day): " + completionDurationLeft + "\n");
+                        System.out.println("Completion time left in seconds (Add to opening time of pickup day): " + completionDurationLeft + "\n");
                         return pickupTime;
                     } else {
                         completionDurationLeft = completionDurationLeft.minus(openTillCloseToday);

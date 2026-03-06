@@ -1,7 +1,6 @@
 package com.example;
 
 import com.example.javafx.Javafx;
-import com.example.util.PickupTimeCalculator;
 
 import javafx.application.Application;
 
@@ -15,10 +14,6 @@ public class App
 {
     public static void main( String[] args )
     {
-
-        //PickupTimeCalculator pickupTimeCalculator = new PickupTimeCalculator();
-        //pickupTimeCalculator.calculatePickupTime(null);
-
         Application.launch(Javafx.class, args);
     }
 }
