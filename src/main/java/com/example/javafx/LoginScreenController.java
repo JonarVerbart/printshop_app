@@ -23,7 +23,7 @@ public class LoginScreenController extends BaseController {
             loggedCustomer = dbInterface.retrieveCustomer(password.getText(), email.getText());
             SceneManager.setLoggedCustomer(loggedCustomer);
         } catch(NullPointerException e) {
-            System.out.println("No account with this email exists");
+            System.out.println("\nNo account with this email exists");
         }
         if(loggedCustomer != null) {
             SceneManager.switchTo("shoppingScreen.fxml");

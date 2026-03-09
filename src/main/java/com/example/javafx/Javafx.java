@@ -28,7 +28,7 @@ public class Javafx extends Application{
                 if (Constants.CLEAR_ITEMS) {
                     SceneManager.clearItemsTable();
                 }
-                System.out.println("Application has shut down");
+                System.out.println("\nApplication has shut down\n");
             } catch (Exception e) {
                 e.getMessage();
             }

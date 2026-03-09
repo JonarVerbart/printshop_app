@@ -70,16 +70,18 @@ public class SceneManager {
 
         stage.setScene(new Scene(root));
         stage.show();
-        try {
-            System.out.println("loggedCustomer in Controller: " + controller.loggedCustomer.getEmail());
-        } catch(NullPointerException e) {
-            System.out.println(e.getMessage());
-        }
-        try {;
-            System.out.println("loggedCustomer in SceneManager: " + loggedCustomer.getEmail());
-        } catch(NullPointerException e) {
-            System.out.println(e.getMessage());
-        }
+        
+        // For debugging loggedCustomer
+        // try {
+        //     System.out.println("\nloggedCustomer in Controller: " + controller.loggedCustomer.getEmail());
+        // } catch(NullPointerException e) {
+        //     System.out.println(e.getMessage());
+        // }
+        // try {;
+        //     System.out.println("loggedCustomer in SceneManager: " + loggedCustomer.getEmail() + "\n");
+        // } catch(NullPointerException e) {
+        //     System.out.println(e.getMessage());
+        // }
     }
 
 }

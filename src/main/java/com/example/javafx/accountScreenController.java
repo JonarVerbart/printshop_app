@@ -3,7 +3,6 @@ package com.example.javafx;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.sql.Timestamp;
 import java.util.List;
 
 import com.example.pojo.TreeRowModel;
@@ -27,7 +26,7 @@ public class accountScreenController extends BaseController {
     @FXML
     private TreeTableColumn<TreeRowModel, String> statusTreeTableColumn;
     @FXML
-    private TreeTableColumn<TreeRowModel, Timestamp> pickupTimeTreeTableColumn;
+    private TreeTableColumn<TreeRowModel, String> pickupTimeTreeTableColumn;
     @FXML
     private TreeTableColumn<TreeRowModel, BigDecimal> unitPriceTreeTableColumn;
     @FXML
@@ -42,9 +41,9 @@ public class accountScreenController extends BaseController {
     @FXML
     public void initialize() {
         orderTreeTableColumn.setCellValueFactory(param -> param.getValue().getValue().orderIdProperty());
-        dateTreeTableColumn.setCellValueFactory(param -> param.getValue().getValue().localDateTimePlaced());
+        dateTreeTableColumn.setCellValueFactory(param -> param.getValue().getValue().timestampPlacedStringProperty());
         statusTreeTableColumn.setCellValueFactory(param -> param.getValue().getValue().statusProperty());
-        pickupTimeTreeTableColumn.setCellValueFactory(param -> param.getValue().getValue().pickupTimeProperty());
+        pickupTimeTreeTableColumn.setCellValueFactory(param -> param.getValue().getValue().pickupTimeStringProperty());
         unitPriceTreeTableColumn.setCellValueFactory(param -> param.getValue().getValue().unitPriceProperty());
         quantityTreeTableColumn.setCellValueFactory(param -> param.getValue().getValue().quantityProperty());
         subtotalTreeTableColumn.setCellValueFactory(param -> param.getValue().getValue().subtotalProperty());
@@ -75,9 +74,9 @@ public class accountScreenController extends BaseController {
         for (int i = 0; i < orderData.size(); i++) {
             TreeRowModel orderRow = new TreeRowModel();
             orderRow.orderIdProperty().set("Order #: " + orderData.get(i).orderIdProperty().getValue());
-            orderRow.localDateTimePlaced().set(timeFormatHandler.timestampToLocalDateTime(orderData.get(i).timestampPlacedProperty().getValue()));
+            orderRow.timestampPlacedStringProperty().set(timeFormatHandler.timestampToLocalDateTime(orderData.get(i).timestampPlacedProperty().getValue()));
             orderRow.statusProperty().set(orderStatusProcessor.getStatusDisplayName(orderData.get(i).statusProperty().get()));
-            orderRow.pickupTimeProperty().set(orderData.get(i).pickupTimeProperty().getValue());
+            orderRow.pickupTimeStringProperty().set(timeFormatHandler.timestampToLocalDateTime(orderData.get(i).pickupTimeProperty().getValue()));
             orderRow.subtotalProperty().set(orderData.get(i).subtotalProperty().get());
             orderRow.vatProperty().set(orderData.get(i).vatProperty().get());
             orderRow.totalCostProperty().set(orderData.get(i).totalCostProperty().get());
@@ -88,7 +87,7 @@ public class accountScreenController extends BaseController {
                 if (orderData.get(i).orderIdProperty().getValue().equals(orderItemData.get(j).orderIdProperty().getValue())) {
                     TreeRowModel itemRow = new TreeRowModel();
                     itemRow.orderIdProperty().set(orderItemData.get(j).fullDisplayNameProperty().get());
-                    itemRow.pickupTimeProperty().set(orderItemData.get(j).pickupTimeProperty().getValue());
+                    //itemRow.pickupTimeProperty().set(orderItemData.get(j).pickupTimeProperty().getValue());
                     itemRow.unitPriceProperty().set(orderItemData.get(j).unitPriceProperty().get());
                     itemRow.quantityProperty().set(orderItemData.get(j).quantityProperty().get());
 

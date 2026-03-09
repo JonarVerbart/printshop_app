@@ -123,7 +123,7 @@ public class DbInterface {
                     }
                 }
             } else {
-                System.out.println("Wrong password");
+                System.out.println("\nWrong password");
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -338,7 +338,7 @@ public class DbInterface {
     public void insertOrder(Order order) {
         try {
         String sqlQuery = """
-                INSERT INTO orders (customer_id, order_placed, total_completion_time_seconds, sub_total_cost, total_VAT, total_cost, order_status)
+                INSERT INTO orders (customer_id, order_placed, pickup_time, sub_total_cost, total_VAT, total_cost, order_status)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
                 """;
 
@@ -346,7 +346,7 @@ public class DbInterface {
             PreparedStatement ps = conn.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setInt(1, order.getCustomerId());
                 ps.setTimestamp(2, order.getOrderPlacedTimestamp());
-                ps.setLong(3, order.getTotalCompletionTime().toSeconds());
+                ps.setTimestamp(3, order.getPickupTime());
                 ps.setBigDecimal(4, order.getSubTotalCost());
                 ps.setBigDecimal(5, order.getTotalVAT());
                 ps.setBigDecimal(6, order.getTotalCost());

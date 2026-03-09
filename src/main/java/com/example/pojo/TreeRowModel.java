@@ -13,9 +13,10 @@ public class TreeRowModel {
     private final StringProperty orderId = new SimpleStringProperty();
     private final StringProperty fullDisplayName = new SimpleStringProperty();
     private final ObjectProperty<Timestamp> timestampPlaced = new SimpleObjectProperty<>();
-    private final StringProperty localDateTimePlaced = new SimpleStringProperty();
+    private final StringProperty timestampPlacedString = new SimpleStringProperty();
     private final StringProperty status = new SimpleStringProperty();
     private final ObjectProperty<Timestamp> pickupTime = new SimpleObjectProperty<>();
+    private final StringProperty pickupTimeString = new SimpleStringProperty();
     private final ObjectProperty<BigDecimal> unitPrice = new SimpleObjectProperty<>();
     private final ObjectProperty<Integer> quantity = new SimpleObjectProperty<>();
     private final ObjectProperty<BigDecimal> subtotal = new SimpleObjectProperty<>();
@@ -35,19 +36,21 @@ public class TreeRowModel {
         return this.timestampPlaced;
     }
 
-    public StringProperty localDateTimePlaced() {
-        return this.localDateTimePlaced;
+    public StringProperty timestampPlacedStringProperty() {
+        return this.timestampPlacedString;
     }
 
     public StringProperty statusProperty() {
         return this.status;
     }
 
-
     public ObjectProperty<Timestamp> pickupTimeProperty() {
         return this.pickupTime;
     }
 
+    public StringProperty pickupTimeStringProperty() {
+        return this.pickupTimeString;
+    }
 
     public ObjectProperty<BigDecimal> unitPriceProperty() {
         return this.unitPrice;

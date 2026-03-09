@@ -1,5 +1,6 @@
 package com.example.util;
 
+import java.sql.Timestamp;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.Instant;
@@ -19,7 +20,16 @@ public class PickupTimeCalculator {
         this.openingHours = csvImporter.getOpeningHoursFromCSV();
     }
 
-    public ZonedDateTime calculatePickupTime(Order order) {
+
+    public Duration calculateTotalCompletionTime(Order order) {
+        Duration totalCompletionTime = Duration.ofSeconds(0);
+        for (var item : order.getItems()) {
+            totalCompletionTime = totalCompletionTime.plus(item.getCompletionTime().multipliedBy(item.getQuantity()));
+        };
+        return totalCompletionTime;
+    }
+
+    public Timestamp calculatePickupTime(Order order) {
         Instant utcNow = Instant.now();
         ZonedDateTime utcDateTimeNow = utcNow.atZone(ZoneOffset.UTC);
         DayOfWeek utcDayOfWeekNow = utcDateTimeNow.getDayOfWeek();
@@ -42,9 +52,9 @@ public class PickupTimeCalculator {
 
         if (completionDurationLeft.minus(nowTillClosingToday).isNegative()) {
             ZonedDateTime pickupTime = utcDateTimeNow.plus(completionDurationLeft);
-            System.out.println("Now till closing today: " + nowTillClosingToday);
-            System.out.println("Can be picked up same day at: ");
-            return pickupTime;
+            //System.out.println("Now till closing today: " + nowTillClosingToday);
+            System.out.println("\nCan be picked up same day at: " + Timestamp.from(pickupTime.toInstant()));
+            return Timestamp.from(pickupTime.toInstant());  // Timestamp converts from UTC to system time. MySQL converts back to UTC.
         } else {
             completionDurationLeft = completionDurationLeft.minus(nowTillClosingToday);
             int i = 1;
@@ -66,7 +76,7 @@ public class PickupTimeCalculator {
                     if (completionDurationLeft.minus(openTillCloseToday).isNegative()) {
                         ZonedDateTime pickupTime = utcDateTimeNow.withHour(todaysOpeningHour).withMinute(todaysOpeningMinute).plusDays(i).plus(completionDurationLeft);
                         System.out.println("Completion time left in seconds (Add to opening time of pickup day): " + completionDurationLeft + "\n");
-                        return pickupTime;
+                        return Timestamp.from(pickupTime.toInstant());
                     } else {
                         completionDurationLeft = completionDurationLeft.minus(openTillCloseToday);
                         System.out.println("Completion time left in seconds: " + completionDurationLeft + "\n");

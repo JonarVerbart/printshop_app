@@ -3,7 +3,6 @@ package com.example.pojo;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +29,8 @@ public class Order {
     private List<Item> items = new ArrayList<>();
     // private ArrayList<String> itemsFullName;
 
-    private Timestamp orderPlacedTimestamp;
-    private LocalDateTime pickupTime;
+    private Timestamp orderPlacedTimestamp; // Timestamp in Java is system time. In MySQL it is automatically converted to UTC.
+    private Timestamp pickupTime;   // Timestamp in Java is system time. In MySQL it is automatically converted to UTC.
     private Duration totalCompletionTime;
 
     private BigDecimal subTotalCost;
@@ -73,11 +72,11 @@ public class Order {
         this.orderPlacedTimestamp = orderPlacedTimestamp;
     }
 
-    public LocalDateTime getPickupTime() {
+    public Timestamp getPickupTime() {
         return this.pickupTime;
     }
 
-    public void setPickupTime(LocalDateTime pickupTime) {
+    public void setPickupTime(Timestamp pickupTime) {
         this.pickupTime = pickupTime;
     }
 

@@ -8,11 +8,15 @@ import java.time.format.DateTimeFormatter;
 public class TimeFormatHandler {
     
     public String timestampToLocalDateTime(Timestamp timestamp) {
-        String desiredPattern = "dd-MMM-yyyy hh:mm";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(desiredPattern);
+        if (timestamp != null) {
+            String desiredPattern = "dd-MMM-yyyy HH:mm";
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(desiredPattern);
 
-        LocalDateTime localDateTime = timestamp.toLocalDateTime();
-        return localDateTime.format(formatter);
+            LocalDateTime localDateTime = timestamp.toLocalDateTime();
+            return localDateTime.format(formatter);
+        } else {
+            return null;
+        }
     }
 
     public Duration StringHHmmToDuration(String hhmm) {

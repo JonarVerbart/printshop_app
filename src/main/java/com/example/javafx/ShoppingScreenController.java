@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
-import java.time.Duration;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
@@ -14,6 +13,7 @@ import com.example.jsonrw.JsonWriter;
 import com.example.pojo.Item;
 import com.example.pojo.Order;
 import com.example.util.PickupTimeCalculator;
+import com.example.util.TimeFormatHandler;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -50,10 +50,11 @@ public class ShoppingScreenController extends BaseController {
 
     Order newOrder;
     PickupTimeCalculator pickupTimeCalculator = new PickupTimeCalculator();
+    TimeFormatHandler timeFormatHandler = new TimeFormatHandler();
 
     @FXML
     public void initialize() {
-        System.out.println("Initializing Shopping Screen...");
+        System.out.println("\nInitializing Shopping Screen...");
 
         productColumn.setCellValueFactory(new PropertyValueFactory<>("fullDisplayName"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
@@ -88,14 +89,10 @@ public class ShoppingScreenController extends BaseController {
             cartTableView.getItems().add(cartItem);
 
             newOrder.addItem(cartItem);
-
-            Duration totalCompletionTime = Duration.ofSeconds(0);
-            for (var item : newOrder.getItems()) {
-                totalCompletionTime = totalCompletionTime.plus(item.getCompletionTime().multipliedBy(item.getQuantity()));
-            };
-            newOrder.setTotalCompletionTime(totalCompletionTime);
-            newOrder.setPickupTime(pickupTimeCalculator.calculatePickupTime(newOrder).toLocalDateTime());
-            System.out.println(newOrder.getPickupTime());
+           
+            newOrder.setTotalCompletionTime(pickupTimeCalculator.calculateTotalCompletionTime(newOrder));
+            newOrder.setPickupTime(pickupTimeCalculator.calculatePickupTime(newOrder));
+            //System.out.println(newOrder.getPickupTime());
 
             updateOrderCosts();
             updateLiveReceipt();
@@ -106,8 +103,6 @@ public class ShoppingScreenController extends BaseController {
     }
 
     public void fillProductList() {
-        //ObservableList<String> productList = FXCollections.observableArrayList("Paper", "Canvas", "Plate");
-        //shoppingScreenProducts.setItems(productList);
         productList.getItems().setAll(dbInterface.retrieveDistinctProducts());
     }
 
@@ -153,7 +148,7 @@ public class ShoppingScreenController extends BaseController {
         newOrder.setCustomerId(loggedCustomer.getId());
         Integer randomStatus = new Random().nextInt(7);
         newOrder.setStatus(randomStatus);
-        newOrder.setOrderPlacedTimestamp(new Timestamp(System.currentTimeMillis()));
+        newOrder.setOrderPlacedTimestamp(new Timestamp(System.currentTimeMillis()));    // In system time and includes timezone information. Get's converted to UTC when stored as timestamp in MySQL.
 
         dbInterface.insertOrder(newOrder);
 
@@ -163,8 +158,8 @@ public class ShoppingScreenController extends BaseController {
         } );
         System.out.println("Order was placed");
         cartTableView.getItems().clear();
+        liveReceipt.getItems().setAll("Your order was placed succesfully!", "Your items will be ready to pick up at: " + timeFormatHandler.timestampToLocalDateTime(newOrder.getPickupTime()), "You can view the status and order details in your account.", "", "Thank you for ordering at PhotoShop photoshop.", "It's the best photoshop.");
         newOrder = new Order();
-        liveReceipt.getItems().setAll("Your order was placed succesfully!", "Your items will be ready to pick up at: DateTime", "You can view the status and order details in your account.", "", "Thank you for ordering at PhotoShop photoshop.", "It's the best photoshop.");
     }
 
     public void updateOrderCosts() {
@@ -193,7 +188,7 @@ public class ShoppingScreenController extends BaseController {
         receiptElements[2] = "----------------------------- +";
         receiptElements[3] = "Total: " + newOrder.getTotalCost();
         receiptElements[4] = "";
-        receiptElements[5] = "Pickup time: " + newOrder.getPickupTime();
+        receiptElements[5] = "Pickup time: " + timeFormatHandler.timestampToLocalDateTime(newOrder.getPickupTime());
 
         liveReceipt.getItems().setAll(receiptElements);
     }
