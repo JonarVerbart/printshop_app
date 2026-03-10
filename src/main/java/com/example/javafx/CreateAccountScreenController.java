@@ -32,7 +32,9 @@ public class CreateAccountScreenController extends BaseController {
 
     @Override
     public void setStage(Stage stage) {
-        // TODO Auto-generated method stub
+        this.stage = stage;
+        stage.setMinWidth(200);
+        stage.setMinHeight(400);
     }
 
     @Override
