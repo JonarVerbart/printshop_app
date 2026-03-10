@@ -24,6 +24,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
 public class ShoppingScreenController extends BaseController {
     
@@ -63,6 +64,11 @@ public class ShoppingScreenController extends BaseController {
         newOrder = new Order();
 
         System.out.println("Shopping Screen initialized");
+    }
+
+    @Override
+    public void setStage(Stage stage) {
+        // TODO Auto-generated method stub
     }
 
     @Override

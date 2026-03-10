@@ -8,6 +8,7 @@ import com.example.pojo.Customer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class CreateAccountScreenController extends BaseController {
     
@@ -19,6 +20,20 @@ public class CreateAccountScreenController extends BaseController {
     private TextField email;
     @FXML
     private TextField password;
+    @FXML
+    private TextField address;
+    @FXML
+    private TextField zipCode;
+    @FXML
+    private TextField city;
+    @FXML
+    private TextField phoneNumber;
+
+
+    @Override
+    public void setStage(Stage stage) {
+        // TODO Auto-generated method stub
+    }
 
     @Override
     public void initializeFromDb() {
@@ -27,7 +42,7 @@ public class CreateAccountScreenController extends BaseController {
 
     @FXML
     public void createNewAccount(ActionEvent event) {
-        Customer customer = new Customer(email.getText(), firstName.getText(), lastName.getText());
+        Customer customer = new Customer(email.getText(), firstName.getText(), lastName.getText(), address.getText(), zipCode.getText(), city.getText(), phoneNumber.getText());
         try {
             dbInterface.insertCustomer(customer, password.getText());
             try {

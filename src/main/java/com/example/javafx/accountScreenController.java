@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
+import javafx.stage.Stage;
 
 public class accountScreenController extends BaseController {
 
@@ -49,6 +50,11 @@ public class accountScreenController extends BaseController {
         subtotalTreeTableColumn.setCellValueFactory(param -> param.getValue().getValue().subtotalProperty());
         vatTreeTableColumn.setCellValueFactory(param -> param.getValue().getValue().vatProperty());
         totalCostTreeTableColumn.setCellValueFactory(param -> param.getValue().getValue().totalCostProperty());
+    }
+
+    @Override
+    public void setStage(Stage stage) {
+        // TODO Auto-generated method stub
     }
 
     @Override

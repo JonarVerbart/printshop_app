@@ -5,6 +5,7 @@ import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class LoginScreenController extends BaseController {
     
@@ -12,6 +13,13 @@ public class LoginScreenController extends BaseController {
     private TextField email;
     @FXML
     private TextField password;
+
+    @Override
+    public void setStage(Stage stage) {
+        this.stage = stage;
+        stage.setMinWidth(200);
+        stage.setMinHeight(400);
+    }
 
     @Override
     public void initializeFromDb() {

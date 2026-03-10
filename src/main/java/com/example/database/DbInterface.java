@@ -40,8 +40,8 @@ public class DbInterface {
 
     public void insertCustomer(Customer customer, String plainPassword) throws SQLException {
         String sqlQuery = """
-                INSERT INTO customers (email, password_hash, first_name, last_name)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO customers (email, password_hash, first_name, last_name, address, zip_code, city, phone_number)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 """;
 
                 try(Connection conn = dataSource.getConnection();
@@ -50,6 +50,10 @@ public class DbInterface {
                 ps.setString(2, plainToHashed(plainPassword));
                 ps.setString(3, customer.getFirstname());
                 ps.setString(4, customer.getLastName());
+                ps.setString(5, customer.getAddress());
+                ps.setString(6, customer.getZipCode());
+                ps.setString(7, customer.getCity());
+                ps.setString(8, customer.getPhoneNumber());
 
                 ps.executeUpdate();
 
@@ -103,7 +107,7 @@ public class DbInterface {
         try {
             if (checkPassword(plainPassword, retrieveHashedPassword(email))) {
                 String sqlQuery = """
-                SELECT id, first_name, last_name
+                SELECT id, first_name, last_name, address, zip_code, city, phone_number
                 FROM customers
                 WHERE email = ?
                 """;
@@ -117,7 +121,11 @@ public class DbInterface {
                         String firstName = rs.getString("first_name");
                         String lastName = rs.getString("last_name");
                         Integer id = rs.getInt("id");
-                        Customer customer = new Customer(id, email, firstName, lastName);
+                        String address = rs.getString("address");
+                        String zipCode = rs.getString("zip_code");
+                        String city = rs.getString("city");
+                        String phoneNumber = rs.getString("phone_number");
+                        Customer customer = new Customer(id, email, firstName, lastName, address, zipCode, city, phoneNumber);
                         return customer;
                         }
                     }

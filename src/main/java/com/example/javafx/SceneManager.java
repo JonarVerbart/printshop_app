@@ -64,11 +64,13 @@ public class SceneManager {
         Parent root = loader.load();
         
         BaseController controller = loader.getController();
+        controller.setStage(stage);
         controller.setDbInterface(dbInterface);
         controller.setLoggedCustomer(loggedCustomer);
         controller.initializeFromDb();
 
         stage.setScene(new Scene(root));
+        stage.centerOnScreen();
         stage.show();
         
         // For debugging loggedCustomer
