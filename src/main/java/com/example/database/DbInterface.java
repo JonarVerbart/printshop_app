@@ -346,8 +346,8 @@ public class DbInterface {
     public void insertOrder(Order order) {
         try {
         String sqlQuery = """
-                INSERT INTO orders (customer_id, order_placed, pickup_time, sub_total_cost, total_VAT, total_cost, order_status)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO orders (customer_id, order_placed, pickup_time, sub_total_cost, total_VAT, total_cost, order_status, notes)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 """;
 
                 try(Connection conn = dataSource.getConnection();
@@ -359,6 +359,7 @@ public class DbInterface {
                 ps.setBigDecimal(5, order.getTotalVAT());
                 ps.setBigDecimal(6, order.getTotalCost());
                 ps.setInt(7, order.getStatus());
+                ps.setString(8, order.getOrderNotes());
 
                 ps.executeUpdate();
 
@@ -474,6 +475,31 @@ try {
                     System.out.println(e.getMessage());
                 }
         return null;
+    }
+
+    public String retrieveOrderNotes(Integer orderId) {
+        try {
+        String sqlQuery = """
+                SELECT notes FROM orders order_item
+                WHERE id = ?
+                """;
+
+                try (Connection conn = dataSource.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
+                    ps.setInt(1, orderId);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        while (rs.next()) {
+                        //Integer customerId = rs.getInt("customer_id");
+                        String orderNotes = rs.getString("notes");
+                        return orderNotes;
+                        }
+                    }
+                }    
+                } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+
     }
 
     public void insertOrderItem(Integer orderId, Integer itemId, Integer quantity, String unitPriceAtOrderTime, String fullDisplayName) {

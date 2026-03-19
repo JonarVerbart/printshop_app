@@ -11,6 +11,7 @@ import com.example.util.TimeFormatHandler;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
@@ -38,6 +39,8 @@ public class accountScreenController extends BaseController {
     private TreeTableColumn<TreeRowModel, BigDecimal> vatTreeTableColumn;
     @FXML
     private TreeTableColumn<TreeRowModel, BigDecimal> totalCostTreeTableColumn;
+    @FXML
+    private TextArea orderNotesTextArea;
 
     @FXML
     public void initialize() {
@@ -50,6 +53,18 @@ public class accountScreenController extends BaseController {
         subtotalTreeTableColumn.setCellValueFactory(param -> param.getValue().getValue().subtotalProperty());
         vatTreeTableColumn.setCellValueFactory(param -> param.getValue().getValue().vatProperty());
         totalCostTreeTableColumn.setCellValueFactory(param -> param.getValue().getValue().totalCostProperty());
+
+        ordersTreeTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null && newSelection != oldSelection) {
+                TreeItem<TreeRowModel> parentOfSelectedRow = newSelection.getParent();
+                TreeItem<TreeRowModel> parentRow = (parentOfSelectedRow == ordersTreeTableView.getRoot()) ? newSelection : parentOfSelectedRow;
+                //TreeItem<TreeRowModel> parentRow = (parentOfSelectedRow == null) ? newSelection : parentOfSelectedRow;
+                String orderCellValue = orderTreeTableColumn.getCellData(parentRow);
+                String orderIdString = orderCellValue.substring(orderCellValue.lastIndexOf(" ") + 1);
+                Integer orderId = Integer.parseInt(orderIdString);
+                updateOrderNotesTextArea(orderId);
+            }
+        });
     }
 
     @Override
@@ -116,4 +131,13 @@ public class accountScreenController extends BaseController {
         SceneManager.switchTo("shoppingScreen.fxml", "accountScreen.fxml");
     }
     
+    public void updateOrderNotesTextArea(Integer orderId) {
+        String orderNotes = dbInterface.retrieveOrderNotes(orderId);
+        if (orderNotes != null) {
+            orderNotesTextArea.setText(orderNotes);         
+        } else {
+            orderNotesTextArea.setText("No notes were submitted with this order");
+        }
+    }
+
 }

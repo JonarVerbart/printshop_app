@@ -77,7 +77,7 @@
                                     <VBox alignment="BOTTOM_CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
                                           <ListView fx:id="liveReceipt" minHeight="300.0" prefHeight="400.0" />
-                                          <TextArea minHeight="129.0" prefHeight="1000.0" promptText="Order notes" />
+                                          <TextArea fx:id="orderNotes" minHeight="129.0" prefHeight="1000.0" promptText="Order notes" wrapText="true" />
                                           <HBox alignment="CENTER" spacing="25.0">
                                              <children>
                                                 <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">

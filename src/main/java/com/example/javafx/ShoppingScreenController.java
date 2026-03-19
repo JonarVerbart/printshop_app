@@ -23,6 +23,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
@@ -40,6 +41,8 @@ public class ShoppingScreenController extends BaseController {
     private ComboBox<String> finishComboBox;
     @FXML
     private TextField quantityTextField;
+    @FXML
+    private TextArea orderNotes;
 
     @FXML
     private TableView<Item> cartTableView;
@@ -182,7 +185,9 @@ public class ShoppingScreenController extends BaseController {
         Integer randomStatus = new Random().nextInt(7);
         newOrder.setStatus(randomStatus);
         newOrder.setOrderPlacedTimestamp(new Timestamp(System.currentTimeMillis()));    // In system time and includes timezone information. Get's converted to UTC when stored as timestamp in MySQL.
-
+        if (!orderNotes.getText().equals("")) {
+            newOrder.setOrderNotes(orderNotes.getText());
+        }
         dbInterface.insertOrder(newOrder);
 
         List<Item> orderItems = newOrder.getItems();

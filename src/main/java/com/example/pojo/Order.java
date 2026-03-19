@@ -39,6 +39,8 @@ public class Order {
 
     private Integer status;
 
+    private String orderNotes;
+
 
     public void addItem(Item item) {
         items.add(item);
@@ -118,6 +120,14 @@ public class Order {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getOrderNotes() {
+        return orderNotes;
+    }
+
+    public void setOrderNotes(String orderNotes) {
+        this.orderNotes = orderNotes;
     }
 
 }
