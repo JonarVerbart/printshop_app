@@ -11,7 +11,7 @@ public abstract class BaseController {
     protected DbInterface dbInterface;
     protected Customer loggedCustomer;
 
-    public abstract void setStage(Stage stage);
+    public abstract void setStage(Stage stage, String previousFxml);
 
     public void setDbInterface(DbInterface dbInterface) {
         this.dbInterface = dbInterface;

@@ -53,7 +53,7 @@ public class accountScreenController extends BaseController {
     }
 
     @Override
-    public void setStage(Stage stage) {
+    public void setStage(Stage stage, String previousFxml) {
         // TODO Auto-generated method stub
     }
 
@@ -65,7 +65,7 @@ public class accountScreenController extends BaseController {
     public void logOut(ActionEvent event) throws Exception {
         loggedCustomer = null;
         SceneManager.setLoggedCustomer(loggedCustomer);
-        SceneManager.switchTo("loginScreen.fxml");
+        SceneManager.switchTo("loginScreen.fxml", "accountScreen.fxml");
     }
 
     public void fillOrderTable() {
@@ -113,7 +113,7 @@ public class accountScreenController extends BaseController {
     }
 
     public void switchToShoppingScreen() throws IOException{
-        SceneManager.switchTo("shoppingScreen.fxml");
+        SceneManager.switchTo("shoppingScreen.fxml", "accountScreen.fxml");
     }
     
 }

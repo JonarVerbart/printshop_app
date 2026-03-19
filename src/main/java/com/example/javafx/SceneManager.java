@@ -59,20 +59,26 @@ public class SceneManager {
         loggedCustomer = customer;
     }
 
-    public static void switchTo(String fxml) throws IOException {
-        FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource(fxml));
+    public static void switchTo(String nextFxml, String previousFxml) throws IOException {
+        FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource(nextFxml));
         Parent root = loader.load();
         
         BaseController controller = loader.getController();
-        controller.setStage(stage);
+        controller.setStage(stage, previousFxml);
         controller.setDbInterface(dbInterface);
         controller.setLoggedCustomer(loggedCustomer);
         controller.initializeFromDb();
 
         stage.setScene(new Scene(root));
-        stage.centerOnScreen();
+        //stage.sizeToScene();
+        //stage.centerOnScreen();
         stage.show();
-        
+
+        // Platform.runLater(() -> {
+        //     stage.setWidth(stage.getWidth() + 0.1);
+        //     stage.setHeight(stage.getHeight() + 0.1);
+        // });
+
         // For debugging loggedCustomer
         try {
             System.out.println("\nloggedCustomer in Controller: " + controller.loggedCustomer.getEmail());

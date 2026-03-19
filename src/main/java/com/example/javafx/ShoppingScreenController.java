@@ -67,8 +67,30 @@ public class ShoppingScreenController extends BaseController {
     }
 
     @Override
-    public void setStage(Stage stage) {
-        // TODO Auto-generated method stub
+    public void setStage(Stage stage, String previousFxml) {
+        this.stage = stage;
+
+        stage.setWidth(stage.getWidth() + 0.1);
+        stage.setHeight(stage.getHeight() + 0.1);
+
+        stage.setMinWidth(1280);
+        stage.setMinHeight(720);
+
+        // stage.setWidth(stage.getWidth() + 0.1);
+        // stage.setHeight(stage.getHeight() + 0.1);
+
+        // System.out.println(previousFxml.equals("loginScreen.fxml"));
+
+        //  if (previousFxml.equals("loginScreen.fxml")) {
+        // //     Platform.runLater(stage::centerOnScreen);
+        //     Platform.runLater(() -> {
+            
+        //     stage.setMaximized(true);
+        //     stage.setWidth(stage.getWidth() + 0.1);
+        //     stage.setHeight(stage.getHeight() + 0.1);
+        // });
+        // }
+        
     }
 
     @Override
@@ -79,7 +101,7 @@ public class ShoppingScreenController extends BaseController {
     public void logOut(ActionEvent event) throws Exception {
         loggedCustomer = null;
         SceneManager.setLoggedCustomer(loggedCustomer);
-        SceneManager.switchTo("loginScreen.fxml");
+        SceneManager.switchTo("loginScreen.fxml", "shoppingScreen.fxml");
     }
 
     public void addToCart() {
@@ -220,7 +242,7 @@ public class ShoppingScreenController extends BaseController {
     }
 
     public void switchToAccountScreen() throws IOException {
-        SceneManager.switchTo("accountScreen.fxml");
+        SceneManager.switchTo("accountScreen.fxml", "shoppingScreen.fxml");
     }
 
 }

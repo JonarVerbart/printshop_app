@@ -31,7 +31,7 @@ public class CreateAccountScreenController extends BaseController {
 
 
     @Override
-    public void setStage(Stage stage) {
+    public void setStage(Stage stage, String previousFxml) {
         this.stage = stage;
         stage.setMinWidth(200);
         stage.setMinHeight(400);
@@ -48,7 +48,7 @@ public class CreateAccountScreenController extends BaseController {
         try {
             dbInterface.insertCustomer(customer, password.getText());
             try {
-                SceneManager.switchTo("loginScreen.fxml");
+                SceneManager.switchTo("loginScreen.fxml", "createAccountScreen.fxml");
             } catch(Exception e) {
                 e.getMessage();
             }
@@ -58,7 +58,7 @@ public class CreateAccountScreenController extends BaseController {
     }
 
     public void switchToLoginScreen() throws IOException {
-        SceneManager.switchTo("loginScreen.fxml");
+        SceneManager.switchTo("loginScreen.fxml", "createAccountScreen.fxml");
     }
 
 }
