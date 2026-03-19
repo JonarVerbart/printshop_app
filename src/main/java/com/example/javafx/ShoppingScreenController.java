@@ -15,6 +15,7 @@ import com.example.pojo.Order;
 import com.example.util.PickupTimeCalculator;
 import com.example.util.TimeFormatHandler;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -75,6 +76,10 @@ public class ShoppingScreenController extends BaseController {
 
         stage.setMinWidth(1280);
         stage.setMinHeight(720);
+
+        if (previousFxml.equals("loginScreen.fxml")) {
+            Platform.runLater(stage::centerOnScreen);
+        }
 
         // stage.setWidth(stage.getWidth() + 0.1);
         // stage.setHeight(stage.getHeight() + 0.1);
