@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 
+import com.example.constants.Constants;
+import com.example.invoicing.PdfMaker;
 import com.example.jsonrw.JsonReader;
 import com.example.jsonrw.JsonWriter;
 import com.example.pojo.Item;
@@ -56,6 +58,7 @@ public class ShoppingScreenController extends BaseController {
     Order newOrder;
     PickupTimeCalculator pickupTimeCalculator = new PickupTimeCalculator();
     TimeFormatHandler timeFormatHandler = new TimeFormatHandler();
+    PdfMaker pdfMaker = new PdfMaker(null);
 
     @FXML
     public void initialize() {
@@ -194,6 +197,13 @@ public class ShoppingScreenController extends BaseController {
         orderItems.forEach(orderItem -> {
             dbInterface.insertOrderItem(newOrder.getId(), orderItem.getId(), orderItem.getQuantity(), orderItem.getUnitPrice(), orderItem.getFullDisplayName());
         } );
+
+        try {
+            pdfMaker.generate(Constants.COMPANY_LOGO_PATH, loggedCustomer, newOrder, Constants.INVOICE_SAVE_PATH);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+        
         System.out.println("Order was placed");
         cartTableView.getItems().clear();
         liveReceipt.getItems().setAll("Your order was placed succesfully!", "Your items will be ready to pick up at: " + timeFormatHandler.timestampToLocalDateTime(newOrder.getPickupTime()), "You can view the status and order details in your account.", "", "Thank you for ordering at PhotoShop photoshop.", "It's the best photoshop.");
