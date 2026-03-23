@@ -375,6 +375,69 @@ public class DbInterface {
                 }
     }
 
+    public Order retrieveOrder(Integer orderId) {
+        Order retrievedOrder = new Order();
+
+        try {
+        String sqlQuery = """
+                SELECT *
+                FROM orders
+                WHERE id = ?
+                """;
+
+                try (Connection conn = dataSource.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
+
+                    ps.setInt(1, orderId);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        while (rs.next()) {
+                        retrievedOrder.setId(rs.getInt("id"));
+                        retrievedOrder.setCustomerId(rs.getInt("customer_id"));
+                        retrievedOrder.setOrderPlacedTimestamp(rs.getTimestamp("order_placed"));
+                        retrievedOrder.setPickupTime(rs.getTimestamp("pickup_time"));
+                        retrievedOrder.setSubTotalCost(new BigDecimal(rs.getString("sub_total_cost")));
+                        retrievedOrder.setTotalVAT(new BigDecimal(rs.getString("total_VAT")));
+                        retrievedOrder.setTotalCost(new BigDecimal(rs.getString("total_cost")));
+                        retrievedOrder.setStatus(rs.getInt("order_status"));
+                        retrievedOrder.setOrderNotes(rs.getString("notes"));
+                        }
+                    }
+                }    
+                } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        try {
+        String sqlQuery = """
+                SELECT *
+                FROM order_item
+                WHERE order_id = ?
+                """;
+
+                try (Connection conn = dataSource.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
+
+                    ps.setInt(1, orderId);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        while (rs.next()) {
+                        Item item = new Item();
+                        
+                        item.setId(rs.getInt("item_id"));
+                        item.setQuantity(rs.getInt("quantity"));
+                        item.setUnitPrice(rs.getString("unit_price_at_order_placed"));
+                        item.setFullDisplayName(rs.getString("full_display_name"));
+
+                        retrievedOrder.addItem(item);
+                        }
+                    }
+                }    
+                } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return retrievedOrder;
+
+    }
+
     public List<TreeRowModel> retrieveAllCustomerOrderItems(String email) {
         try {
         String sqlQuery = """

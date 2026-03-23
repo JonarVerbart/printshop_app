@@ -53,6 +53,10 @@ public class Item {
         this.fullDisplayName = product + " " + size + " " + finish;
     }
 
+    public void setFullDisplayName(String fullDisplayName) {
+        this.fullDisplayName = fullDisplayName;
+    }
+
     public String getFullDisplayName() {
         return fullDisplayName;
     }

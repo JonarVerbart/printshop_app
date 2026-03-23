@@ -1,10 +1,14 @@
 package com.example.javafx;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.nio.file.Path;
 import java.util.List;
 
+import com.example.constants.Constants;
+import com.example.invoicing.PdfMaker;
 import com.example.pojo.TreeRowModel;
 import com.example.util.OrderStatusProcessor;
 import com.example.util.TimeFormatHandler;
@@ -15,6 +19,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class accountScreenController extends BaseController {
@@ -42,6 +47,10 @@ public class accountScreenController extends BaseController {
     @FXML
     private TextArea orderNotesTextArea;
 
+    PdfMaker pdfMaker = new PdfMaker(null);
+   
+    private Integer selectedOrderId;
+
     @FXML
     public void initialize() {
         orderTreeTableColumn.setCellValueFactory(param -> param.getValue().getValue().orderIdProperty());
@@ -61,15 +70,15 @@ public class accountScreenController extends BaseController {
                 //TreeItem<TreeRowModel> parentRow = (parentOfSelectedRow == null) ? newSelection : parentOfSelectedRow;
                 String orderCellValue = orderTreeTableColumn.getCellData(parentRow);
                 String orderIdString = orderCellValue.substring(orderCellValue.lastIndexOf(" ") + 1);
-                Integer orderId = Integer.parseInt(orderIdString);
-                updateOrderNotesTextArea(orderId);
+                selectedOrderId = Integer.parseInt(orderIdString);
+                updateOrderNotesTextArea(selectedOrderId);
             }
         });
     }
 
     @Override
     public void setStage(Stage stage, String previousFxml) {
-        // TODO Auto-generated method stub
+        this.stage = stage;
     }
 
     @Override
@@ -137,6 +146,29 @@ public class accountScreenController extends BaseController {
             orderNotesTextArea.setText(orderNotes);         
         } else {
             orderNotesTextArea.setText("No notes were submitted with this order");
+        }
+    }
+
+    public void printInvoice()  {
+        if (selectedOrderId == null) {
+            System.out.println("Can't save invoice: No order selected");
+            return;
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save invoice as PDF");
+        FileChooser.ExtensionFilter pdfFilter = new FileChooser.ExtensionFilter("PDF Files", "*.pdf");
+        fileChooser.getExtensionFilters().add(pdfFilter);
+        fileChooser.setInitialFileName("invoice_order#" + selectedOrderId);
+
+        File file = fileChooser.showSaveDialog(stage);
+
+        if (file != null) {
+            try {
+                pdfMaker.generate(Constants.COMPANY_LOGO_PATH, loggedCustomer, dbInterface.retrieveOrder(selectedOrderId), Path.of(file.getAbsolutePath()));
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
