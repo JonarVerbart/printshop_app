@@ -2,6 +2,7 @@ package com.example.pojo;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,15 +29,17 @@ public class Order {
     private List<Item> items = new ArrayList<>();
     // private ArrayList<String> itemsFullName;
 
-    private Timestamp orderPlacedTimestamp;
-    private Timestamp pickupTime;
-    private String totalCompletionTime;
+    private Timestamp orderPlacedTimestamp; // Timestamp in Java is system time. In MySQL it is automatically converted to UTC.
+    private Timestamp pickupTime;   // Timestamp in Java is system time. In MySQL it is automatically converted to UTC.
+    private Duration totalCompletionTime;
 
     private BigDecimal subTotalCost;
     private BigDecimal totalVAT;
     private BigDecimal totalCost;
 
-    private boolean orderClosed;
+    private Integer status;
+
+    private String orderNotes;
 
 
     public void addItem(Item item) {
@@ -79,11 +82,11 @@ public class Order {
         this.pickupTime = pickupTime;
     }
 
-    public String getTotalCompletionTime() {
+    public Duration getTotalCompletionTime() {
         return this.totalCompletionTime;
     }
 
-    public void setTotalCompletionTime(String totalCompletionTime) {
+    public void setTotalCompletionTime(Duration totalCompletionTime) {
         this.totalCompletionTime = totalCompletionTime;
     }
 
@@ -111,19 +114,20 @@ public class Order {
         this.totalCost = totalCost;
     }
 
-    public boolean isOrderClosed() {
-        return this.orderClosed;
+    public Integer getStatus() {
+        return this.status;
     }
 
-    public boolean getOrderClosed() {
-        return this.orderClosed;
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
-    public void setOrderClosed(boolean orderClosed) {
-        this.orderClosed = orderClosed;
+    public String getOrderNotes() {
+        return orderNotes;
     }
 
-    
-
+    public void setOrderNotes(String orderNotes) {
+        this.orderNotes = orderNotes;
+    }
 
 }

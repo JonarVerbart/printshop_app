@@ -1,5 +1,7 @@
 package com.example.pojo;
 
+import java.time.Duration;
+
 public class Item {
     
     private Integer id;
@@ -7,9 +9,14 @@ public class Item {
     private String size;
     private String finish;
     private String unitPrice;
-    private String completionTime;
+    private Duration completionTime;
     private Integer quantity;
     private String fullDisplayName;
+
+    // Default constructor for JsonReader
+    public Item() {
+
+    }
 
     public Item(String product, String size, String finish) {
         this.product = product;
@@ -25,7 +32,7 @@ public class Item {
         this.unitPrice = unitPrice;
     }
 
-    public Item(Integer id, String product, String size, String finish, String unitPrice, String completionTime) {
+    public Item(Integer id, String product, String size, String finish, String unitPrice, Duration completionTime) {
         this.id = id;
         this.product = product;
         this.size = size;
@@ -34,7 +41,7 @@ public class Item {
         this.completionTime = completionTime;
     }
 
-    public Item(String product, String size, String finish, String unitPrice, String completionTime) {
+    public Item(String product, String size, String finish, String unitPrice, Duration completionTime) {
         this.product = product;
         this.size = size;
         this.finish = finish;
@@ -44,6 +51,10 @@ public class Item {
 
     public void setFullDisplayName() {
         this.fullDisplayName = product + " " + size + " " + finish;
+    }
+
+    public void setFullDisplayName(String fullDisplayName) {
+        this.fullDisplayName = fullDisplayName;
     }
 
     public String getFullDisplayName() {
@@ -88,11 +99,11 @@ public class Item {
         this.quantity = quantity;
     }
 
-    public String getCompletionTime() {
+    public Duration getCompletionTime() {
         return completionTime;
     }
 
-    public void setCompletionTime(String completionTime) {
+    public void setCompletionTime(Duration completionTime) {
         this.completionTime = completionTime;
     }
 

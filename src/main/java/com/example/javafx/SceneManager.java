@@ -26,7 +26,6 @@ public class SceneManager {
         stage = primaryStage;
         ConnProvider conn = new ConnProvider();
         dbInterface = new DbInterface(conn.getDataSource());
-        
     }
 
     public static void inventoryCsvToDb() {
@@ -60,21 +59,31 @@ public class SceneManager {
         loggedCustomer = customer;
     }
 
-    public static void switchTo(String fxml) throws IOException {
-        FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource(fxml));
+    public static void switchTo(String nextFxml, String previousFxml) throws IOException {
+        FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource(nextFxml));
         Parent root = loader.load();
         
         BaseController controller = loader.getController();
+        controller.setStage(stage, previousFxml);
         controller.setDbInterface(dbInterface);
         controller.setLoggedCustomer(loggedCustomer);
         controller.initializeFromDb();
 
         stage.setScene(new Scene(root));
+        //stage.sizeToScene();
+        //stage.centerOnScreen();
         stage.show();
+
+        // Platform.runLater(() -> {
+        //     stage.setWidth(stage.getWidth() + 0.1);
+        //     stage.setHeight(stage.getHeight() + 0.1);
+        // });
+
+        // For debugging loggedCustomer
         try {
-            System.out.println("loggedCustomer in Controller: " + controller.loggedCustomer.getEmail());
+            System.out.println("\nloggedCustomer in Controller: " + controller.loggedCustomer.getEmail());
         } catch(NullPointerException e) {
-            System.out.println(e.getMessage());
+            System.out.println("\n" + e.getMessage());
         }
         try {;
             System.out.println("loggedCustomer in SceneManager: " + loggedCustomer.getEmail());

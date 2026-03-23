@@ -1,15 +1,21 @@
 package com.example.javafx;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 
+import com.example.jsonrw.JsonReader;
 import com.example.jsonrw.JsonWriter;
 import com.example.pojo.Item;
 import com.example.pojo.Order;
+import com.example.util.PickupTimeCalculator;
+import com.example.util.TimeFormatHandler;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -17,8 +23,10 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
 public class ShoppingScreenController extends BaseController {
     
@@ -33,6 +41,8 @@ public class ShoppingScreenController extends BaseController {
     private ComboBox<String> finishComboBox;
     @FXML
     private TextField quantityTextField;
+    @FXML
+    private TextArea orderNotes;
 
     @FXML
     private TableView<Item> cartTableView;
@@ -44,10 +54,12 @@ public class ShoppingScreenController extends BaseController {
     private TableColumn<Item, String> unitPriceColumn;
 
     Order newOrder;
+    PickupTimeCalculator pickupTimeCalculator = new PickupTimeCalculator();
+    TimeFormatHandler timeFormatHandler = new TimeFormatHandler();
 
     @FXML
     public void initialize() {
-        System.out.println("Initializing Shopping Screen...");
+        System.out.println("\nInitializing Shopping Screen...");
 
         productColumn.setCellValueFactory(new PropertyValueFactory<>("fullDisplayName"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
@@ -59,6 +71,37 @@ public class ShoppingScreenController extends BaseController {
     }
 
     @Override
+    public void setStage(Stage stage, String previousFxml) {
+        this.stage = stage;
+
+        stage.setWidth(stage.getWidth() + 0.1);
+        stage.setHeight(stage.getHeight() + 0.1);
+
+        stage.setMinWidth(1280);
+        stage.setMinHeight(720);
+
+        if (previousFxml.equals("loginScreen.fxml")) {
+            Platform.runLater(stage::centerOnScreen);
+        }
+
+        // stage.setWidth(stage.getWidth() + 0.1);
+        // stage.setHeight(stage.getHeight() + 0.1);
+
+        // System.out.println(previousFxml.equals("loginScreen.fxml"));
+
+        //  if (previousFxml.equals("loginScreen.fxml")) {
+        // //     Platform.runLater(stage::centerOnScreen);
+        //     Platform.runLater(() -> {
+            
+        //     stage.setMaximized(true);
+        //     stage.setWidth(stage.getWidth() + 0.1);
+        //     stage.setHeight(stage.getHeight() + 0.1);
+        // });
+        // }
+        
+    }
+
+    @Override
     public void initializeFromDb() {
         fillProductList();
     }
@@ -66,7 +109,7 @@ public class ShoppingScreenController extends BaseController {
     public void logOut(ActionEvent event) throws Exception {
         loggedCustomer = null;
         SceneManager.setLoggedCustomer(loggedCustomer);
-        SceneManager.switchTo("loginScreen.fxml");
+        SceneManager.switchTo("loginScreen.fxml", "shoppingScreen.fxml");
     }
 
     public void addToCart() {
@@ -82,6 +125,10 @@ public class ShoppingScreenController extends BaseController {
             cartTableView.getItems().add(cartItem);
 
             newOrder.addItem(cartItem);
+           
+            newOrder.setTotalCompletionTime(pickupTimeCalculator.calculateTotalCompletionTime(newOrder));
+            newOrder.setPickupTime(pickupTimeCalculator.calculatePickupTime(newOrder));
+            //System.out.println(newOrder.getPickupTime());
 
             updateOrderCosts();
             updateLiveReceipt();
@@ -92,8 +139,6 @@ public class ShoppingScreenController extends BaseController {
     }
 
     public void fillProductList() {
-        //ObservableList<String> productList = FXCollections.observableArrayList("Paper", "Canvas", "Plate");
-        //shoppingScreenProducts.setItems(productList);
         productList.getItems().setAll(dbInterface.retrieveDistinctProducts());
     }
 
@@ -137,16 +182,23 @@ public class ShoppingScreenController extends BaseController {
 
     public void placeOrder() {
         newOrder.setCustomerId(loggedCustomer.getId());
-        newOrder.setOrderClosed(false);
-        newOrder.setOrderPlacedTimestamp(new Timestamp(System.currentTimeMillis()));
-
+        Integer randomStatus = new Random().nextInt(7);
+        newOrder.setStatus(randomStatus);
+        newOrder.setOrderPlacedTimestamp(new Timestamp(System.currentTimeMillis()));    // In system time and includes timezone information. Get's converted to UTC when stored as timestamp in MySQL.
+        if (!orderNotes.getText().equals("")) {
+            newOrder.setOrderNotes(orderNotes.getText());
+        }
         dbInterface.insertOrder(newOrder);
 
         List<Item> orderItems = newOrder.getItems();
         orderItems.forEach(orderItem -> {
-            dbInterface.insertOrderItem(newOrder.getId(), orderItem.getId(), orderItem.getQuantity());
+            dbInterface.insertOrderItem(newOrder.getId(), orderItem.getId(), orderItem.getQuantity(), orderItem.getUnitPrice(), orderItem.getFullDisplayName());
         } );
+        
         System.out.println("Order was placed");
+        cartTableView.getItems().clear();
+        liveReceipt.getItems().setAll("Your order was placed succesfully!", "Your items will be ready to pick up at: " + timeFormatHandler.timestampToLocalDateTime(newOrder.getPickupTime()), "You can view the status and order details in your account.", "There you can also download the invoice", "", "Thank you for ordering at PhotoShop photoshop.", "It's the best photoshop.");
+        newOrder = new Order();
     }
 
     public void updateOrderCosts() {
@@ -169,18 +221,39 @@ public class ShoppingScreenController extends BaseController {
     }
 
     public void updateLiveReceipt() {
-        String[] receiptElements = new String[4];
+        String[] receiptElements = new String[6];
         receiptElements[0] = "Subtotal: " + newOrder.getSubTotalCost();
         receiptElements[1] = "21% VAT: " + newOrder.getTotalVAT();
         receiptElements[2] = "----------------------------- +";
         receiptElements[3] = "Total: " + newOrder.getTotalCost();
+        receiptElements[4] = "";
+        receiptElements[5] = "Pickup time: " + timeFormatHandler.timestampToLocalDateTime(newOrder.getPickupTime());
 
         liveReceipt.getItems().setAll(receiptElements);
     }
 
     public void exportCartToJson() {
+        FileChooserUtil fileChooser = new FileChooserUtil();
         JsonWriter jsonWriter = new JsonWriter();
-        jsonWriter.writeToJsonFile(newOrder);
+        jsonWriter.writeToJsonFile(newOrder, fileChooser.saveFile(productList.getScene().getWindow(), "JSON File", "*.json"));
+    }
+
+    public void importCartFromJson() {
+        FileChooserUtil fileChooser = new FileChooserUtil();
+        JsonReader jsonReader = new JsonReader();
+        Order loadedCart = jsonReader.loadCartFromJsonFile(fileChooser.loadFile(productList.getScene().getWindow(), "JSON File", "*.json"));
+        if (loadedCart != null && loadedCart instanceof Order) {
+            cartTableView.getItems().clear();
+            loadedCart.getItems().forEach(item -> {
+                cartTableView.getItems().add(item);
+            });
+            newOrder = loadedCart;
+            updateLiveReceipt();
+        }
+    }
+
+    public void switchToAccountScreen() throws IOException {
+        SceneManager.switchTo("accountScreen.fxml", "shoppingScreen.fxml");
     }
 
 }

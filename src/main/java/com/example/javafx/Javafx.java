@@ -5,6 +5,8 @@
 
 package com.example.javafx;
 
+import com.example.constants.Constants;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -13,29 +15,24 @@ public class Javafx extends Application{
     @Override
     public void start(Stage primaryStage) throws Exception {
         SceneManager.init(primaryStage);
-        SceneManager.switchTo("loginScreen.fxml");
-        SceneManager.inventoryCsvToDb();
-
+        SceneManager.switchTo("loginScreen.fxml", null);
+        if (Constants.LOAD_ITEMS) {
+            SceneManager.inventoryCsvToDb();
+        }
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
-                SceneManager.clearOrderItemTable();
-                SceneManager.clearOrdersTable();
-                SceneManager.clearItemsTable();
-                System.out.println("Application has shut down");
+                if (Constants.CLEAR_ORDERS) {
+                    SceneManager.clearOrderItemTable();
+                    SceneManager.clearOrdersTable();
+                }
+                if (Constants.CLEAR_ITEMS) {
+                    SceneManager.clearItemsTable();
+                }
+                System.out.println("\nApplication has shut down\n");
             } catch (Exception e) {
                 e.getMessage();
             }
         }));
     }
 
-    /*
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("loginScreen.fxml"));
-        Scene scene = new Scene(root);
-        primaryStage.setTitle("PhotoShop Store");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
-    */
 }

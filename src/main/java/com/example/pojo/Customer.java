@@ -1,35 +1,52 @@
 package com.example.pojo;
 
-import java.util.ArrayList;
-
 public class Customer {
     
     private Integer id;
 
     private String email;
-    private String firstname;
+    private String firstName;
     private String lastName;
 
-    private String streetName;
-    private Integer houseNumber;
-    private String postCode;
-    private Integer phoneNumber;
-
-    //private ArrayList<Integer> currentOrders;
-    //private ArrayList<Integer> pastOrders;
+    private String address;
+    private String zipCode;
+    private String city;
+    private String phoneNumber;
 
     public Customer(String email, String firstName, String lastName) {
         this.email = email;
-        this.firstname = firstName;
+        this.firstName = firstName;
         this.lastName = lastName;
     }
 
     public Customer(Integer id, String email, String firstName, String lastName) {
         this.id = id;
         this.email = email;
-        this.firstname = firstName;
+        this.firstName = firstName;
         this.lastName = lastName;
     }
+
+    public Customer(String email, String firstName, String lastName, String address, String zipCode, String city, String phoneNumber) {
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.address = address;
+        this.zipCode = zipCode;
+        this.city = city;
+        this.phoneNumber = phoneNumber;
+    }
+
+    public Customer(Integer id, String email, String firstName, String lastName, String address, String zipCode, String city, String phoneNumber) {
+        this.id = id;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.address = address;
+        this.zipCode = zipCode;
+        this.city = city;
+        this.phoneNumber = phoneNumber;
+    }
+
 
     public Integer getId() {
         return this.id;
@@ -48,11 +65,11 @@ public class Customer {
     }
 
     public String getFirstname() {
-        return this.firstname;
+        return this.firstName;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setFirstname(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getLastName() {
@@ -63,5 +80,35 @@ public class Customer {
         this.lastName = lastName;
     }
 
+    public String getAddress() {
+        return address;
+    }
 
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 }
