@@ -26,6 +26,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class ShoppingScreenController extends BaseController {
@@ -43,6 +44,8 @@ public class ShoppingScreenController extends BaseController {
     private TextField quantityTextField;
     @FXML
     private TextArea orderNotes;
+    @FXML
+    private Text unitPriceText;
 
     @FXML
     private TableView<Item> cartTableView;
@@ -179,6 +182,17 @@ public class ShoppingScreenController extends BaseController {
             }
         });
     }
+
+    public void updateUnitPriceText() {
+        String unitPrice = dbInterface.retrieveUnitPrice(
+            productList.getSelectionModel().getSelectedItem(), 
+            sizesComboBox.getSelectionModel().getSelectedItem(), 
+            finishComboBox.getSelectionModel().getSelectedItem());
+
+        unitPrice = unitPrice != null ? unitPrice : "--";
+
+        unitPriceText.setText("Unit Price: €" + unitPrice);
+        }
 
     public void placeOrder() {
         newOrder.setCustomerId(loggedCustomer.getId());

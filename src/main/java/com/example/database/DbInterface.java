@@ -343,6 +343,30 @@ public class DbInterface {
             return null;
     }
 
+    public String retrieveUnitPrice(String productType, String size, String finish) {
+        try {
+        String sqlQuery = """
+                SELECT unit_price FROM items
+                WHERE product = ? and size = ? and finish = ?
+                """;
+            try (Connection conn = dataSource.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
+
+                ps.setString(1, productType);
+                ps.setString(2, size);
+                ps.setString(3, finish);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return rs.getString("unit_price");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
     public void insertOrder(Order order) {
         try {
         String sqlQuery = """

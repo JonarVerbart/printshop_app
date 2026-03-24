@@ -36,8 +36,8 @@
                                                    <children>
                                                       <VBox alignment="CENTER" minWidth="150.0" spacing="30.0">
                                                          <children>
-                                                            <ComboBox fx:id="sizesComboBox" prefHeight="100.0" prefWidth="274.0" promptText="Size" />
-                                                            <ComboBox fx:id="finishComboBox" prefHeight="100.0" prefWidth="274.0" promptText="Finish" />
+                                                            <ComboBox fx:id="sizesComboBox" onAction="#updateUnitPriceText" prefHeight="100.0" prefWidth="274.0" promptText="Size" />
+                                                            <ComboBox fx:id="finishComboBox" onAction="#updateUnitPriceText" prefHeight="100.0" prefWidth="274.0" promptText="Finish" />
                                                          </children>
                                                          <HBox.margin>
                                                             <Insets />
@@ -45,6 +45,11 @@
                                                       </VBox>
                                                       <VBox alignment="CENTER" minWidth="150.0" spacing="30.0">
                                                          <children>
+                                                            <Text fx:id="unitPriceText" strokeType="OUTSIDE" strokeWidth="0.0" text="Unit Price: €--">
+                                                               <font>
+                                                                  <Font size="24.0" />
+                                                               </font>
+                                                            </Text>
                                                             <TextField fx:id="quantityTextField" alignment="CENTER" minWidth="150.0" promptText="Quantity">
                                                                <font>
                                                                   <Font size="24.0" />
