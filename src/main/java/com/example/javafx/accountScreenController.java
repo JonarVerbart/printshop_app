@@ -139,6 +139,10 @@ public class accountScreenController extends BaseController {
     public void switchToShoppingScreen() throws IOException{
         SceneManager.switchTo("shoppingScreen.fxml", "accountScreen.fxml");
     }
+
+    public void switchToEditAccountScreen() throws IOException {
+        SceneManager.switchTo("editAccountScreen.fxml", "accountScreen.fxml");
+    }
     
     public void updateOrderNotesTextArea(Integer orderId) {
         String orderNotes = dbInterface.retrieveOrderNotes(orderId);

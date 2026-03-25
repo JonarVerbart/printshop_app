@@ -64,9 +64,10 @@ public class SceneManager {
         Parent root = loader.load();
         
         BaseController controller = loader.getController();
+        controller.setLoggedCustomer(loggedCustomer);
         controller.setStage(stage, previousFxml);
         controller.setDbInterface(dbInterface);
-        controller.setLoggedCustomer(loggedCustomer);
+        // Moved set logged customer from here
         controller.initializeFromDb();
 
         stage.setScene(new Scene(root));
