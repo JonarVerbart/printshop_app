@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import com.example.constants.Constants;
 import com.example.invoicing.PdfMaker;
@@ -133,7 +134,11 @@ public class accountScreenController extends BaseController {
         }
         ordersTreeTableView.setShowRoot(false);
         ordersTreeTableView.setRoot(treeRoot);
-        treeRoot.getChildren().getFirst().setExpanded(true);
+        try {
+            treeRoot.getChildren().getFirst().setExpanded(true);
+        } catch (NoSuchElementException e) {
+            System.out.println("\nNo orders to display");
+        }
     }
 
     public void switchToShoppingScreen() throws IOException{

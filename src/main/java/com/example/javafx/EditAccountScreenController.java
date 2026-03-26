@@ -81,16 +81,16 @@ public class EditAccountScreenController extends BaseController {
         address = (address.isBlank()) ? loggedCustomer.getAddress() : address;
         zipCode = (zipCode.isBlank()) ? loggedCustomer.getZipCode() : zipCode;
         city = (city.isBlank()) ? loggedCustomer.getCity() : city;
-
+        // BUG: editAccountPage does not use updated info when reloaded without restarting app
         if (newPasswordField.getText().isBlank()) {
             if (approveWithoutPasswordChange()) {
                 System.out.println("\nUpdating without new passsword...");
-                // Update DB wihtout new password
+                dbInterface.updateCustomer(false, loggedCustomer.getEmail(), email, null, firstName, lastName, address, zipCode, city, phoneNumber);
             }
         } else {
             if (approveWithPasswordChange()) {
                 System.out.println("\nUpdating with new password...");
-                // Update DB with new password
+                dbInterface.updateCustomer(true, loggedCustomer.getEmail(), email, dbInterface.plainToHashed(newPasswordField.getText()), firstName, lastName, address, zipCode, city, phoneNumber);
             }
         }
     }

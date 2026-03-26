@@ -86,20 +86,50 @@ public class DbInterface {
         return null;
     }
 
-    public void updateCustomer(String email, String newEmail, String newFirstName, String newLastName) throws SQLException {
-        String sqlQuery = """
-        UPDATE customers SET email = ?, first_name = ?, last_name = ?
-        WHERE email = ?
-        """;
+    public void updateCustomer(Boolean updatePassword, String email, String newEmail, String newHashedPassword, String newFirstName, String newLastName, String newAddress, String newZipCode, String newCity, String newPhoneNumber) {
+        try {
+            if (updatePassword) {
+                String sqlQuery = """
+                UPDATE customers SET email = ?, password_hash = ?, first_name = ?, last_name = ?, address = ?, zip_code = ?, city = ?, phone_number = ?
+                WHERE email = ?
+                """;
 
-        try (Connection conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
-                ps.setString(1, newEmail);
-                ps.setString(2, newFirstName);
-                ps.setString(3, newLastName);
-                ps.setString(4, email);
+                try (Connection conn = dataSource.getConnection();
+                    PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
+                        ps.setString(1, newEmail);
+                        ps.setString(2, newHashedPassword);
+                        ps.setString(3, newFirstName);
+                        ps.setString(4, newLastName);
+                        ps.setString(5, newAddress);
+                        ps.setString(6, newZipCode);
+                        ps.setString(7, newCity);
+                        ps.setString(8, newPhoneNumber);
+                        ps.setString(9, email);
 
-                ps.executeUpdate();
+                        ps.executeUpdate();
+                    }
+                } else {
+                String sqlQuery = """
+                UPDATE customers SET email = ?, first_name = ?, last_name = ?, address = ?, zip_code = ?, city = ?, phone_number = ?
+                WHERE email = ?
+                """;
+
+                try (Connection conn = dataSource.getConnection();
+                    PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
+                        ps.setString(1, newEmail);
+                        ps.setString(2, newFirstName);
+                        ps.setString(3, newLastName);
+                        ps.setString(4, newAddress);
+                        ps.setString(5, newZipCode);
+                        ps.setString(6, newCity);
+                        ps.setString(7, newPhoneNumber);
+                        ps.setString(8, email);
+
+                        ps.executeUpdate();
+                    }
+                }
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
             }
     }
 
