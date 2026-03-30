@@ -8,26 +8,31 @@ import com.example.pojo.Customer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class CreateAccountScreenController extends BaseController {
     
     @FXML
-    private TextField firstName;
+    private TextField firstNameTextField;
     @FXML
-    private TextField lastName;
+    private TextField lastNameTextField;
     @FXML
-    private TextField email;
+    private TextField emailTextField;
     @FXML
-    private TextField password;
+    private TextField passwordTextField;
     @FXML
-    private TextField address;
+    private TextField addressTextField;
     @FXML
-    private TextField zipCode;
+    private TextField zipCodeTextField;
     @FXML
-    private TextField city;
+    private TextField cityTextField;
     @FXML
-    private TextField phoneNumber;
+    private TextField phoneNumberTextField;
+
+    @FXML
+    private Text feedbackText;
 
 
     @Override
@@ -44,10 +49,27 @@ public class CreateAccountScreenController extends BaseController {
 
     @FXML
     public void createNewAccount(ActionEvent event) {
-        Customer customer = new Customer(email.getText(), firstName.getText(), lastName.getText(), address.getText(), zipCode.getText(), city.getText(), phoneNumber.getText());
+
+        String email = emailTextField.getText();
+        String phoneNumber = phoneNumberTextField.getText();
+        String firstName = firstNameTextField.getText();
+        String lastName = lastNameTextField.getText();
+        String address = addressTextField.getText();
+        String zipCode = zipCodeTextField.getText();
+        String city = cityTextField.getText();
+
+        if (email.isBlank() || firstName.isBlank() || lastName.isBlank() || address.isBlank() || zipCode.isBlank() || city.isBlank() || passwordTextField.getText().isBlank()) {
+            feedbackText.setText("All fields are required");
+            feedbackText.setFill(Color.RED);
+            feedbackText.setVisible(true);
+            return;
+        }
+
+        Customer customer = new Customer(email, firstName, lastName, address, zipCode, city, phoneNumber);
         try {
-            dbInterface.insertCustomer(customer, password.getText());
+            dbInterface.insertCustomer(customer, passwordTextField.getText());
             try {
+                SceneManager.accountCreated = true;
                 SceneManager.switchTo("loginScreen.fxml", "createAccountScreen.fxml");
             } catch(Exception e) {
                 e.getMessage();

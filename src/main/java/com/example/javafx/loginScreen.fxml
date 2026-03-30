@@ -25,10 +25,8 @@
             <Button mnemonicParsing="false" onAction="#logIn" prefHeight="25.0" prefWidth="150.0" text="Login" />
             <Button mnemonicParsing="false" onAction="#switchToCreateAccountScreen" prefHeight="25.0" prefWidth="150.0" text="Create account" />
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Don't have an account yet?" />
+            <Text fx:id="feedbackText" fill="RED" layoutX="188.0" layoutY="475.0" strokeType="OUTSIDE" strokeWidth="0.0" text="No account with this email or wrong password" visible="false" />
          </children>
-         <padding>
-            <Insets bottom="40.0" />
-         </padding>
       </VBox>
    </children>
 </AnchorPane>

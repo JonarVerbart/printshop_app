@@ -6,6 +6,8 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class LoginScreenController extends BaseController {
@@ -14,6 +16,8 @@ public class LoginScreenController extends BaseController {
     private TextField email;
     @FXML
     private TextField password;
+    @FXML
+    private Text feedbackText;
 
     @Override
     public void setStage(Stage stage, String previousFxml) {
@@ -27,6 +31,15 @@ public class LoginScreenController extends BaseController {
         
         Platform.runLater(stage::sizeToScene);
         Platform.runLater(stage::centerOnScreen);
+
+        if (previousFxml != null) {
+            if (previousFxml.equals("createAccountScreen.fxml") && SceneManager.accountCreated) {
+                feedbackText.setText("Account created successfully");
+                feedbackText.setFill(Color.GREEN);
+                feedbackText.setVisible(true);
+                SceneManager.accountCreated = false;
+            }
+        }
         
         //Platform.runLater(stage::sizeToScene);
 
@@ -52,9 +65,16 @@ public class LoginScreenController extends BaseController {
             SceneManager.setLoggedCustomer(loggedCustomer);
         } catch(NullPointerException e) {
             System.out.println("\nNo account with this email exists");
+            feedbackText.setText("No account with this email or wrong password");
+            feedbackText.setFill(Color.RED);
+            feedbackText.setVisible(true);
         }
         if(loggedCustomer != null) {
             SceneManager.switchTo("shoppingScreen.fxml", "loginScreen.fxml");
+        } else {
+            feedbackText.setText("No account with this email or wrong password");
+            feedbackText.setFill(Color.RED);
+            feedbackText.setVisible(true);
         }
         password.setText(null);
     }

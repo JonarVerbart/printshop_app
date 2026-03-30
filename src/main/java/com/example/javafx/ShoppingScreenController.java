@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -18,6 +19,8 @@ import com.example.util.TimeFormatHandler;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -25,6 +28,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -116,6 +120,23 @@ public class ShoppingScreenController extends BaseController {
     }
 
     public void addToCart() {
+
+        Integer quantityInt = null;
+
+        try {
+            quantityInt = Integer.valueOf(quantityTextField.getText());
+        } catch (NumberFormatException e) {
+            System.out.println("\nQuantity is not an integer");
+            invalidQuantityAlert();
+            return;
+        }
+
+        if (quantityInt <= 0) {
+            System.out.println("\nQuantity is not positive and non-zero");
+            invalidQuantityAlert();
+            return;
+        }
+
         Item cartItem = dbInterface.retrieveItem(
             productList.getSelectionModel().getSelectedItem(), 
             sizesComboBox.getSelectionModel().getSelectedItem(), 
@@ -123,7 +144,7 @@ public class ShoppingScreenController extends BaseController {
         );
 
         if (cartItem != null) {
-            cartItem.setQuantity(Integer.valueOf(quantityTextField.getText()));
+            cartItem.setQuantity(quantityInt);
             cartItem.setFullDisplayName();
             cartTableView.getItems().add(cartItem);
 
@@ -137,7 +158,7 @@ public class ShoppingScreenController extends BaseController {
             updateLiveReceipt();
 
         } else {
-            System.out.println("Item doesn't exist in database");
+            System.out.println("\nItem doesn't exist in database");
         }
     }
 
@@ -268,6 +289,22 @@ public class ShoppingScreenController extends BaseController {
 
     public void switchToAccountScreen() throws IOException {
         SceneManager.switchTo("accountScreen.fxml", "shoppingScreen.fxml");
+    }
+
+    private void invalidQuantityAlert() {
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle("Error: invalid quantity");
+        alert.setHeaderText("The quantity you entered is invalid");
+        alert.setContentText("Please enter a number\n(No letters, spaces, commas, periods, negative values etc.)");
+
+        ButtonType ok = new ButtonType("OK");
+        alert.getButtonTypes().setAll(ok);
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent()) {
+            System.out.println("\nUser selected OK");
+        }
     }
 
 }

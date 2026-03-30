@@ -51,12 +51,12 @@
                               </HBox>
                               <HBox alignment="CENTER_RIGHT" layoutX="10.0" layoutY="327.0" spacing="20.0">
                                  <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Adress:">
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Address:">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
                                     </Text>
-                                    <TextField fx:id="adressTextField" />
+                                    <TextField fx:id="addressTextField" />
                                  </children>
                               </HBox>
                               <HBox alignment="CENTER_RIGHT" layoutX="10.0" layoutY="316.0" spacing="20.0">

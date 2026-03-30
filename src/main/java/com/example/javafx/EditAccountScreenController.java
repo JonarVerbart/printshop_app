@@ -27,7 +27,7 @@ public class EditAccountScreenController extends BaseController {
     @FXML
     private TextField lastNameTextField;
     @FXML
-    private TextField adressTextField;
+    private TextField addressTextField;
     @FXML
     private TextField zipCodeTextField;
     @FXML
@@ -42,7 +42,7 @@ public class EditAccountScreenController extends BaseController {
         phoneNumberTextField.setPromptText(loggedCustomer.getPhoneNumber());
         firstNameTextField.setPromptText(loggedCustomer.getFirstname());
         lastNameTextField.setPromptText(loggedCustomer.getLastName());
-        adressTextField.setPromptText(loggedCustomer.getAddress());
+        addressTextField.setPromptText(loggedCustomer.getAddress());
         zipCodeTextField.setPromptText(loggedCustomer.getZipCode());
         cityTextField.setPromptText(loggedCustomer.getCity());
         
@@ -70,7 +70,7 @@ public class EditAccountScreenController extends BaseController {
         String phoneNumber = phoneNumberTextField.getText();
         String firstName = firstNameTextField.getText();
         String lastName = lastNameTextField.getText();
-        String address = adressTextField.getText();
+        String address = addressTextField.getText();
         String zipCode = zipCodeTextField.getText();
         String city = cityTextField.getText();
         

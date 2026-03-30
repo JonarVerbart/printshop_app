@@ -24,27 +24,28 @@
                <children>
                   <VBox alignment="CENTER" spacing="20.0">
                      <children>
-                        <TextField fx:id="firstName" promptText="First name" />
-                        <TextField fx:id="email" promptText="Email" />
-                        <TextField fx:id="address" promptText="Address" />
-                        <TextField fx:id="city" promptText="City" />
+                        <TextField fx:id="firstNameTextField" promptText="First name" />
+                        <TextField fx:id="emailTextField" promptText="Email" />
+                        <TextField fx:id="addressTextField" promptText="Address" />
+                        <TextField fx:id="cityTextField" promptText="City" />
                      </children>
                   </VBox>
                   <VBox alignment="CENTER" spacing="20.0">
                      <children>
-                        <TextField fx:id="lastName" promptText="Last name" />
-                        <PasswordField fx:id="password" promptText="Password" />
-                        <TextField fx:id="zipCode" promptText="ZIP code" />
-                        <TextField fx:id="phoneNumber" layoutX="10.0" layoutY="143.0" promptText="Phone number" />
+                        <TextField fx:id="lastNameTextField" promptText="Last name" />
+                        <PasswordField fx:id="passwordTextField" promptText="Password" />
+                        <TextField fx:id="zipCodeTextField" promptText="ZIP code" />
+                        <TextField fx:id="phoneNumberTextField" layoutX="10.0" layoutY="143.0" promptText="Phone number" />
                      </children>
                   </VBox>
                </children>
             </HBox>
             <Button mnemonicParsing="false" onAction="#createNewAccount" prefHeight="25.0" prefWidth="149.0" text="Create account" />
             <Button mnemonicParsing="false" onAction="#switchToLoginScreen" prefHeight="25.0" prefWidth="149.0" text="Back" />
+            <Text fx:id="feedbackText" strokeType="OUTSIDE" strokeWidth="0.0" text="All fields are required" visible="false" />
          </children>
          <padding>
-            <Insets bottom="40.0" />
+            <Insets bottom="5.0" />
          </padding>
       </VBox>
    </children>

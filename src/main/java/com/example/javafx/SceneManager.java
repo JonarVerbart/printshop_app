@@ -22,6 +22,8 @@ public class SceneManager {
 
     private static Stage stage;
 
+    public static Boolean accountCreated = false;
+
     public static void init(Stage primaryStage) {
         stage = primaryStage;
         ConnProvider conn = new ConnProvider();
