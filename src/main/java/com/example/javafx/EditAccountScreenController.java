@@ -3,6 +3,8 @@ package com.example.javafx;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,6 +12,8 @@ import javafx.geometry.Insets;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -34,6 +38,9 @@ public class EditAccountScreenController extends BaseController {
     private TextField cityTextField;
     @FXML
     private PasswordField newPasswordField;
+
+    @FXML
+    private Text feedbackText;
     
 
     @Override
@@ -64,6 +71,7 @@ public class EditAccountScreenController extends BaseController {
         SceneManager.switchTo("accountScreen.fxml", "editAccountScreen.fxml");
     }
 
+    // BUG Can't change details twice in same session if email has changed, because email is not updated. (consequence of bug below)
     public void saveAccountDetailChanges() {
 
         String email = emailTextField.getText();
@@ -75,6 +83,17 @@ public class EditAccountScreenController extends BaseController {
         String city = cityTextField.getText();
         
         email = (email.isBlank()) ? loggedCustomer.getEmail() : email;
+
+        Pattern emailPattern = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
+        Matcher emailMatcher = emailPattern.matcher(email);
+
+        if (!emailMatcher.matches()) {
+            feedbackText.setText("Invalid email address");
+            feedbackText.setFill(Color.RED);
+            feedbackText.setVisible(true);
+            return;
+        }
+
         phoneNumber = (phoneNumber.isBlank()) ? loggedCustomer.getPhoneNumber() : phoneNumber;
         firstName = (firstName.isBlank()) ? loggedCustomer.getFirstname() : firstName;
         lastName = (lastName.isBlank()) ? loggedCustomer.getLastName() : lastName;
@@ -86,11 +105,17 @@ public class EditAccountScreenController extends BaseController {
             if (approveWithoutPasswordChange()) {
                 System.out.println("\nUpdating without new passsword...");
                 dbInterface.updateCustomer(false, loggedCustomer.getEmail(), email, null, firstName, lastName, address, zipCode, city, phoneNumber);
+                feedbackText.setText("Changes saved");
+                feedbackText.setFill(Color.GREEN);
+                feedbackText.setVisible(true);
             }
         } else {
             if (approveWithPasswordChange()) {
                 System.out.println("\nUpdating with new password...");
                 dbInterface.updateCustomer(true, loggedCustomer.getEmail(), email, dbInterface.plainToHashed(newPasswordField.getText()), firstName, lastName, address, zipCode, city, phoneNumber);
+                feedbackText.setText("Changes saved");
+                feedbackText.setFill(Color.GREEN);
+                feedbackText.setVisible(true);
             }
         }
     }
@@ -153,6 +178,9 @@ public class EditAccountScreenController extends BaseController {
                         return true; // Selected yes and password correct
                     } else {
                         System.out.println("\nWrong password");
+                        feedbackText.setText("Wrong password");
+                        feedbackText.setFill(Color.RED);
+                        feedbackText.setVisible(true);
                         return false;
                     }
                 } catch (SQLException e) {
@@ -160,6 +188,7 @@ public class EditAccountScreenController extends BaseController {
                 }
             } else {
                 System.out.println("\nUser pressed NO");
+                feedbackText.setVisible(false);
                 return false;
             }
             return false;
@@ -195,6 +224,7 @@ public class EditAccountScreenController extends BaseController {
                 return true;
             } else {
                 System.out.println("\nUser pressed NO");
+                feedbackText.setVisible(false);
                 return false;
             }
 

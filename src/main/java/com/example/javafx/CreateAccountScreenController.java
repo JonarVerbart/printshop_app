@@ -2,6 +2,8 @@ package com.example.javafx;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.example.pojo.Customer;
 
@@ -58,8 +60,18 @@ public class CreateAccountScreenController extends BaseController {
         String zipCode = zipCodeTextField.getText();
         String city = cityTextField.getText();
 
-        if (email.isBlank() || firstName.isBlank() || lastName.isBlank() || address.isBlank() || zipCode.isBlank() || city.isBlank() || passwordTextField.getText().isBlank()) {
+        if (email.isBlank() || firstName.isBlank() || lastName.isBlank() || address.isBlank() || zipCode.isBlank() || city.isBlank() || phoneNumber.isBlank() || passwordTextField.getText().isBlank()) {
             feedbackText.setText("All fields are required");
+            feedbackText.setFill(Color.RED);
+            feedbackText.setVisible(true);
+            return;
+        }
+
+        Pattern emailPattern = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
+        Matcher emailMatcher = emailPattern.matcher(email);
+
+        if (!emailMatcher.matches()) {
+            feedbackText.setText("Invalid email address");
             feedbackText.setFill(Color.RED);
             feedbackText.setVisible(true);
             return;

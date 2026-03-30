@@ -118,9 +118,14 @@
                      </children>
                   </HBox>
                   <Button mnemonicParsing="false" onAction="#saveAccountDetailChanges" text="Save Changes" />
+                  <Text fx:id="feedbackText" strokeType="OUTSIDE" strokeWidth="0.0" text="Invalid email address" visible="false">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Text>
                </children>
                <padding>
-                  <Insets bottom="80.0" />
+                  <Insets bottom="60.0" />
                </padding>
             </VBox>
          </children>
