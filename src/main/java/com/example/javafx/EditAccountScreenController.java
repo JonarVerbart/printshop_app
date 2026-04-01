@@ -71,7 +71,6 @@ public class EditAccountScreenController extends BaseController {
         SceneManager.switchTo("accountScreen.fxml", "editAccountScreen.fxml");
     }
 
-    // BUG Can't change details twice in same session if email has changed, because email is not updated. (consequence of bug below)
     public void saveAccountDetailChanges() {
 
         String email = emailTextField.getText();
@@ -100,22 +99,48 @@ public class EditAccountScreenController extends BaseController {
         address = (address.isBlank()) ? loggedCustomer.getAddress() : address;
         zipCode = (zipCode.isBlank()) ? loggedCustomer.getZipCode() : zipCode;
         city = (city.isBlank()) ? loggedCustomer.getCity() : city;
-        // BUG: editAccountPage does not use updated info when reloaded without restarting app
+        
         if (newPasswordField.getText().isBlank()) {
             if (approveWithoutPasswordChange()) {
                 System.out.println("\nUpdating without new passsword...");
-                dbInterface.updateCustomer(false, loggedCustomer.getEmail(), email, null, firstName, lastName, address, zipCode, city, phoneNumber);
-                feedbackText.setText("Changes saved");
-                feedbackText.setFill(Color.GREEN);
-                feedbackText.setVisible(true);
+                if (dbInterface.updateCustomer(false, loggedCustomer.getEmail(), email, null, firstName, lastName, address, zipCode, city, phoneNumber)) {
+                    loggedCustomer.setEmail(email);
+                    loggedCustomer.setPhoneNumber(phoneNumber);
+                    loggedCustomer.setFirstname(firstName);
+                    loggedCustomer.setLastName(lastName);
+                    loggedCustomer.setAddress(address);
+                    loggedCustomer.setZipCode(zipCode);
+                    loggedCustomer.setCity(city);
+                    
+                    feedbackText.setText("Changes saved");
+                    feedbackText.setFill(Color.GREEN);
+                    feedbackText.setVisible(true);
+                } else {
+                    feedbackText.setText("Error: changes were not saved\nWe are sorry for the inconvenience\nPlease contact support");
+                    feedbackText.setFill(Color.RED);
+                    feedbackText.setVisible(true);
+                }
             }
         } else {
             if (approveWithPasswordChange()) {
                 System.out.println("\nUpdating with new password...");
-                dbInterface.updateCustomer(true, loggedCustomer.getEmail(), email, dbInterface.plainToHashed(newPasswordField.getText()), firstName, lastName, address, zipCode, city, phoneNumber);
-                feedbackText.setText("Changes saved");
-                feedbackText.setFill(Color.GREEN);
-                feedbackText.setVisible(true);
+                if (dbInterface.updateCustomer(true, loggedCustomer.getEmail(), email, dbInterface.plainToHashed(newPasswordField.getText()), firstName, lastName, address, zipCode, city, phoneNumber)) {
+                    loggedCustomer.setEmail(email);
+                    loggedCustomer.setPhoneNumber(phoneNumber);
+                    loggedCustomer.setFirstname(firstName);
+                    loggedCustomer.setLastName(lastName);
+                    loggedCustomer.setAddress(address);
+                    loggedCustomer.setZipCode(zipCode);
+                    loggedCustomer.setCity(city);
+                    
+                    feedbackText.setText("Changes saved");
+                    feedbackText.setFill(Color.GREEN);
+                    feedbackText.setVisible(true);
+                } else {
+                    feedbackText.setText("Error: changes were not saved\\nWe are sorry for the inconvenience\\nPlease contact support");
+                    feedbackText.setFill(Color.RED);
+                    feedbackText.setVisible(true);
+                }
             }
         }
     }

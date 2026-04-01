@@ -86,7 +86,7 @@ public class DbInterface {
         return null;
     }
 
-    public void updateCustomer(Boolean updatePassword, String email, String newEmail, String newHashedPassword, String newFirstName, String newLastName, String newAddress, String newZipCode, String newCity, String newPhoneNumber) {
+    public Boolean updateCustomer(Boolean updatePassword, String email, String newEmail, String newHashedPassword, String newFirstName, String newLastName, String newAddress, String newZipCode, String newCity, String newPhoneNumber) {
         try {
             if (updatePassword) {
                 String sqlQuery = """
@@ -106,7 +106,17 @@ public class DbInterface {
                         ps.setString(8, newPhoneNumber);
                         ps.setString(9, email);
 
-                        ps.executeUpdate();
+                        int nmbrRowsAffected = ps.executeUpdate();
+                        if (nmbrRowsAffected == 0) {
+                            System.out.println("No rows were affected");
+                            return false;
+                        } else if (nmbrRowsAffected == 1) {
+                            System.out.println("Updated account");
+                            return true;
+                        } else {
+                            System.out.println("Error: updated multiple rows");
+                            return false;
+                        }
                     }
                 } else {
                 String sqlQuery = """
@@ -125,12 +135,23 @@ public class DbInterface {
                         ps.setString(7, newPhoneNumber);
                         ps.setString(8, email);
 
-                        ps.executeUpdate();
+                        int nmbrRowsAffected = ps.executeUpdate();
+                        if (nmbrRowsAffected == 0) {
+                            System.out.println("No rows were affected");
+                            return false;
+                        } else if (nmbrRowsAffected == 1) {
+                            System.out.println("Updated account");
+                            return true;
+                        } else {
+                            System.out.println("Error: updated multiple rows");
+                            return false;
+                        }
                     }
                 }
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             }
+            return false;
     }
 
     public Customer retrieveCustomer(String plainPassword, String email) {
