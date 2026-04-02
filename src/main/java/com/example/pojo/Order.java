@@ -46,6 +46,10 @@ public class Order {
         items.add(item);
     }
 
+    public void removeItem(int i) {
+        items.remove(i);
+    }
+
     public List<Item> getItems() {
         return List.copyOf(items);
     }

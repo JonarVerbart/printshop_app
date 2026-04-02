@@ -77,6 +77,13 @@ public class CreateAccountScreenController extends BaseController {
             return;
         }
 
+        if (passwordTextField.getText().length() < 8) {
+            feedbackText.setText("Password must have 8 characters or more");
+            feedbackText.setFill(Color.RED);
+            feedbackText.setVisible(true);
+            return;
+        }
+
         Customer customer = new Customer(email, firstName, lastName, address, zipCode, city, phoneNumber);
         try {
             dbInterface.insertCustomer(customer, passwordTextField.getText());
@@ -88,6 +95,11 @@ public class CreateAccountScreenController extends BaseController {
             }
         } catch(SQLException e) {
             System.out.println(e.getMessage());
+            if (e.getErrorCode() == 1062) {
+                feedbackText.setText("An account is already registered for " + emailTextField.getText());
+                feedbackText.setFill(Color.RED);
+                feedbackText.setVisible(true);
+            }
         }
     }
 

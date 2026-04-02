@@ -162,6 +162,14 @@ public class ShoppingScreenController extends BaseController {
         }
     }
 
+    public void removeFromCart() {
+        int indexOfSelectedRow = cartTableView.getSelectionModel().selectedIndexProperty().getValue();
+        newOrder.removeItem(indexOfSelectedRow);
+        cartTableView.getItems().remove(indexOfSelectedRow);
+        updateOrderCosts();
+        updateLiveReceipt();
+    }
+
     public void fillProductList() {
         productList.getItems().setAll(dbInterface.retrieveDistinctProducts());
     }

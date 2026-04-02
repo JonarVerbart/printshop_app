@@ -30,7 +30,10 @@ public class LoginScreenController extends BaseController {
         stage.setHeight(stage.getHeight() + 0.1);
         
         Platform.runLater(stage::sizeToScene);
-        Platform.runLater(stage::centerOnScreen);
+
+        if (previousFxml == null || !previousFxml.equals("createAccountScreen.fxml")) {
+            Platform.runLater(stage::centerOnScreen);
+        }
 
         if (previousFxml != null) {
             if (previousFxml.equals("createAccountScreen.fxml") && SceneManager.accountCreated) {
