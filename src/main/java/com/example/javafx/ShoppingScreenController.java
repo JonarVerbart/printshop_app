@@ -28,8 +28,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -46,8 +48,14 @@ public class ShoppingScreenController extends BaseController {
     private ComboBox<String> finishComboBox;
     @FXML
     private TextField quantityTextField;
+
     @FXML
     private TextArea orderNotes;
+    @FXML
+    private Text orderNotesText;
+    private TextFormatter<String> textFormatter;
+    private static final int orderNotesMaxChar = 1024;
+
     @FXML
     private Text unitPriceText;
 
@@ -72,6 +80,18 @@ public class ShoppingScreenController extends BaseController {
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         unitPriceColumn.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
 
+        textFormatter = new TextFormatter<>(change -> {
+            if (change.getControlNewText().length() <= orderNotesMaxChar) {
+                orderNotesText.setText("Order notes (max 1024 characters):");
+            orderNotesText.setFill(Color.BLACK);
+                return change;
+            }
+            orderNotesText.setText("Order notes (limit of 1024 characters reached):");
+            orderNotesText.setFill(Color.RED);
+            return null;
+        });
+        orderNotes.setTextFormatter(textFormatter);
+
         newOrder = new Order();
 
         System.out.println("Shopping Screen initialized");
@@ -88,6 +108,7 @@ public class ShoppingScreenController extends BaseController {
         stage.setMinHeight(720);
 
         if (previousFxml.equals("loginScreen.fxml")) {
+            //Platform.runLater(stage::sizeToScene);
             Platform.runLater(stage::centerOnScreen);
         }
 

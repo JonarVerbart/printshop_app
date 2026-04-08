@@ -21,6 +21,8 @@ public class OrderStatusProcessor {
                 return "Recieved by local carrier";
             case 6:
                 return "Order completed";
+            case 99:
+                return "Cancelled";
             default:
                 return "Status unknown, contact support";
         }

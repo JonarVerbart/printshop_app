@@ -42,7 +42,8 @@
                         <VBox alignment="CENTER" prefHeight="631.0" prefWidth="302.0" spacing="20.0" AnchorPane.bottomAnchor="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <Button alignment="TOP_LEFT" mnemonicParsing="false" onAction="#printInvoice" text="Download Invoice" />
-                              <Button mnemonicParsing="false" onAction="#switchToEditAccountScreen" prefWidth="111.0" text="Account details" />
+                              <Button mnemonicParsing="false" onAction="#switchToEditAccountScreen" prefWidth="111.0" text="Account Details" />
+                              <Button mnemonicParsing="false" onAction="#cancelOrder" prefWidth="111.0" text="Cancel Order" />
                            </children>
                         </VBox>
                         <TextArea fx:id="orderNotesTextArea" editable="false" layoutX="51.0" layoutY="192.0" prefHeight="200.0" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />

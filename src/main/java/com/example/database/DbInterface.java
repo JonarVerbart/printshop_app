@@ -662,4 +662,58 @@ try {
                 }
     }
 
+    public Integer retrieveStatus(Integer orderId) {
+        try {
+        String sqlQuery = """
+                SELECT order_status FROM orders
+                WHERE id = ?
+                """;
+
+                try (Connection conn = dataSource.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
+                    ps.setInt(1, orderId);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                        //Integer customerId = rs.getInt("customer_id");
+                        Integer status = rs.getInt("order_status");
+                        return status;
+                        }
+                    }
+                }    
+                } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+    public Boolean updateStatus(Integer orderId, Integer orderStatus) {
+        try {
+            String sqlQuery = """
+                UPDATE orders SET order_status = ?
+                WHERE id = ?
+                """;
+
+                try (Connection conn = dataSource.getConnection();
+                    PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
+                        ps.setInt(1, orderStatus);
+                        ps.setInt(2, orderId);
+
+                        int nmbrRowsAffected = ps.executeUpdate();
+                        if (nmbrRowsAffected == 0) {
+                            System.out.println("No rows were affected");
+                            return false;
+                        } else if (nmbrRowsAffected == 1) {
+                            System.out.println("Updated account");
+                            return true;
+                        } else {
+                            System.out.println("Error: updated multiple rows");
+                            return false;
+                        }
+                    }
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+                return false;
+    }
+
 }

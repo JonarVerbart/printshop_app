@@ -7,6 +7,7 @@ import java.math.RoundingMode;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import com.example.constants.Constants;
 import com.example.invoicing.PdfMaker;
@@ -16,10 +17,13 @@ import com.example.util.TimeFormatHandler;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -179,6 +183,58 @@ public class accountScreenController extends BaseController {
                 System.out.println(e.getMessage());
             }
         }
+    }
+
+    // Confirmation message not showing
+    public void cancelOrder() {
+        Integer selectedOrderStatus = dbInterface.retrieveStatus(selectedOrderId);
+
+        if (selectedOrderStatus >= 4) {
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Cancellation failed");
+            alert.setHeaderText("Your order cannot be cancelled because it has already shipped");
+            alert.setContentText("Only orders that have not yet been shipped can be cancelled");
+
+            ButtonType ok = new ButtonType("OK");
+            alert.getButtonTypes().setAll(ok);
+
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if (result.isPresent()) {
+                return;
+            }
+        }
+        
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Cancel Order");
+        alert.setHeaderText("Are you sure you want to cancel this order?\nCancelling your order cannot be undone");
+        alert.setContentText("Select Cancel or No");
+
+        
+        ButtonType cancel = new ButtonType("Cancel");
+        ButtonType no = new ButtonType("No");
+        alert.getButtonTypes().setAll(cancel, no);
+
+        
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == cancel) {
+            System.out.println("User selected Cancel");
+            if (dbInterface.updateStatus(selectedOrderId, 99)) {
+                Alert alert2 = new Alert(AlertType.CONFIRMATION);
+                alert2.setTitle("Cancel Order");
+                alert2.setHeaderText("Your order has been cancelled");
+                alert2.setContentText("Changes will be visible after reloading the account screen");
+                ButtonType ok = new ButtonType("OK");
+                alert2.getButtonTypes().setAll(ok);
+
+                Optional<ButtonType> result2 = alert2.showAndWait();
+                if (result2.isPresent()) {
+                    return;
+                }
+            }
+        } else {
+            System.out.println("User selected NO");
+        }        
     }
 
 }
