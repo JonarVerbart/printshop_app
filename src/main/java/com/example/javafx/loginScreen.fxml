@@ -20,8 +20,8 @@
                   <Insets bottom="10.0" />
                </VBox.margin>
             </ImageView>
-            <TextField fx:id="email" maxWidth="150.0" minWidth="150.0" promptText="Email" />
-            <PasswordField fx:id="password" maxWidth="150.0" minWidth="150.0" promptText="Password" />
+            <TextField fx:id="email" maxWidth="150.0" minWidth="150.0" onAction="#logIn" promptText="Email" />
+            <PasswordField fx:id="password" maxWidth="150.0" minWidth="150.0" onAction="#logIn" promptText="Password" />
             <Button mnemonicParsing="false" onAction="#logIn" prefHeight="25.0" prefWidth="150.0" text="Login" />
             <Button mnemonicParsing="false" onAction="#switchToCreateAccountScreen" prefHeight="25.0" prefWidth="150.0" text="Create account" />
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Don't have an account yet?" />

@@ -81,7 +81,7 @@
                                  <children>
                                     <VBox alignment="BOTTOM_CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
-                                          <ListView fx:id="liveReceipt" minHeight="300.0" prefHeight="800.0" />
+                                          <ListView fx:id="liveReceipt" focusTraversable="false" minHeight="300.0" prefHeight="800.0" />
                                           <Text fx:id="orderNotesText" strokeType="OUTSIDE" strokeWidth="0.0" text="Order notes (max 1024 characters):">
                                              <VBox.margin>
                                                 <Insets bottom="5.0" top="5.0" />

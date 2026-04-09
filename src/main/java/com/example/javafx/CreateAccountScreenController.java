@@ -40,8 +40,8 @@ public class CreateAccountScreenController extends BaseController {
     @Override
     public void setStage(Stage stage, String previousFxml) {
         this.stage = stage;
-        stage.setMinWidth(200);
-        stage.setMinHeight(400);
+        //stage.setMinWidth(200);
+        //stage.setMinHeight(400);
     }
 
     @Override

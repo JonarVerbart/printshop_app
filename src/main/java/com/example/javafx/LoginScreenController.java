@@ -23,8 +23,8 @@ public class LoginScreenController extends BaseController {
     public void setStage(Stage stage, String previousFxml) {
         this.stage = stage;
 
-        stage.setMinWidth(200);
-        stage.setMinHeight(400);
+        stage.setMinWidth(350);
+        stage.setMinHeight(450);
         
         stage.setWidth(stage.getWidth() + 0.1);
         stage.setHeight(stage.getHeight() + 0.1);

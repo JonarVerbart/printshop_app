@@ -19,6 +19,7 @@ import com.example.util.TimeFormatHandler;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.TraversalDirection;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
@@ -81,6 +82,11 @@ public class ShoppingScreenController extends BaseController {
         unitPriceColumn.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
 
         textFormatter = new TextFormatter<>(change -> {
+            if ("\t".equals(change.getText())) {
+                orderNotes.requestFocusTraversal(TraversalDirection.NEXT);
+                return null;
+            }
+
             if (change.getControlNewText().length() <= orderNotesMaxChar) {
                 orderNotesText.setText("Order notes (max 1024 characters):");
             orderNotesText.setFill(Color.BLACK);

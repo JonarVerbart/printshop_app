@@ -46,7 +46,7 @@
                               <Button mnemonicParsing="false" onAction="#cancelOrder" prefWidth="111.0" text="Cancel Order" />
                            </children>
                         </VBox>
-                        <TextArea fx:id="orderNotesTextArea" editable="false" layoutX="51.0" layoutY="192.0" prefHeight="200.0" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                        <TextArea fx:id="orderNotesTextArea" editable="false" focusTraversable="false" layoutX="51.0" layoutY="192.0" prefHeight="200.0" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                      </children></AnchorPane>
               </items>
             </SplitPane>
@@ -60,7 +60,7 @@
             <Glow />
          </effect>
       </ImageView>
-      <Button alignment="CENTER" layoutX="1206.0" layoutY="14.0" mnemonicParsing="false" onAction="#logOut" prefHeight="60.0" prefWidth="60.0" text="Logout" textAlignment="CENTER" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0" />
       <Button alignment="CENTER" mnemonicParsing="false" onAction="#switchToShoppingScreen" prefHeight="60.0" prefWidth="60.0" text="Back" textAlignment="CENTER" AnchorPane.rightAnchor="92.0" AnchorPane.topAnchor="14.0" />
+      <Button alignment="CENTER" layoutX="1206.0" layoutY="14.0" mnemonicParsing="false" onAction="#logOut" prefHeight="60.0" prefWidth="60.0" text="Logout" textAlignment="CENTER" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0" />
    </children>
 </AnchorPane>
