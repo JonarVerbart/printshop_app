@@ -9,8 +9,10 @@ import com.example.database.DbInterface;
 import com.example.pojo.Customer;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 public class SceneManager {
@@ -73,6 +75,15 @@ public class SceneManager {
         controller.initializeFromDb();
 
         stage.setScene(new Scene(root));
+
+        root.setFocusTraversable(true);
+        root.requestFocus();
+        root.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+            Node target = (Node) event.getTarget();
+            if (!target.isFocusTraversable()) {
+                root.requestFocus();
+            }
+        });
         //stage.sizeToScene();
         //stage.centerOnScreen();
         stage.show();
