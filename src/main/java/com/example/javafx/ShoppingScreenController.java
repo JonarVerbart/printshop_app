@@ -81,6 +81,12 @@ public class ShoppingScreenController extends BaseController {
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         unitPriceColumn.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
 
+        productList.getSelectionModel().selectedItemProperty().addListener((obs, oldItem, newItem) -> {
+            if (newItem != null) {
+                updateComboBoxes();
+            }
+        });
+
         textFormatter = new TextFormatter<>(change -> {
             if ("\t".equals(change.getText())) {
                 orderNotes.requestFocusTraversal(TraversalDirection.NEXT);
