@@ -29,8 +29,11 @@ public class Order {
     private List<Item> items = new ArrayList<>();
     // private ArrayList<String> itemsFullName;
 
+    //@JsonFormat(shape = JsonFormat.Shape.STRING)  // In case of misinterpretation of Timestamp by JDBC
     private Timestamp orderPlacedTimestamp; // Timestamp in Java is system time. In MySQL it is automatically converted to UTC.
+    //@JsonFormat(shape = JsonFormat.Shape.STRING)
     private Timestamp pickupTime;   // Timestamp in Java is system time. In MySQL it is automatically converted to UTC.
+    
     private Duration totalCompletionTime;
 
     private BigDecimal subTotalCost;

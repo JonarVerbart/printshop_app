@@ -10,14 +10,15 @@ public class JsonWriter {
     private static ObjectMapper objectMapper = new ObjectMapper();
 
     public JsonWriter() {
-
+        objectMapper.findAndRegisterModules();
     }
-        public void writeToJsonFile(Object object, File jsonFile) {
+    
+    public void writeToJsonFile(Object object, File jsonFile) {
         try {
             objectMapper.writeValue(jsonFile, object);
 
         } catch (IOException e) {
-            System.out.println("Something went wrong:");
+            System.out.println("\nSomething went wrong:");
             System.out.println(e.getClass().getSimpleName());
         }
     }

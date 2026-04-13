@@ -10,6 +10,10 @@ public class JsonReader {
 
     private static ObjectMapper objectMapper = new ObjectMapper();
     
+    public JsonReader() {
+        objectMapper.findAndRegisterModules();
+    }
+
     public Order loadCartFromJsonFile(File jsonFile) {
         try {
             return objectMapper.readValue(jsonFile, Order.class);
