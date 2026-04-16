@@ -178,7 +178,7 @@ public class accountScreenController extends BaseController {
 
         if (file != null) {
             try {
-                pdfMaker.generate(Constants.COMPANY_LOGO_PATH, loggedCustomer, dbInterface.retrieveOrder(selectedOrderId), Path.of(file.getAbsolutePath()));
+                pdfMaker.generate(Constants.COMPANY_LOGO_RESOURCE, loggedCustomer, dbInterface.retrieveOrder(selectedOrderId), Path.of(file.getAbsolutePath()));
             } catch (IOException e) {
                 System.out.println(e.getMessage());
             }

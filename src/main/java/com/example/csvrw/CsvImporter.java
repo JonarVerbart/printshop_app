@@ -1,7 +1,9 @@
 package com.example.csvrw;
 
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -29,14 +31,18 @@ public class CsvImporter {
         TimeFormatHandler timeFormatHandler = new TimeFormatHandler();
 
         List<List<String>> inventory = new ArrayList<List<String>>();
-        try(CSVReader csvReader = new CSVReader(new FileReader("src/main/resources/inventory_expanded_nobom_redacted.csv"));) {
+        //try(CSVReader csvReader = new CSVReader(new FileReader("src/main/resources/inventory_expanded_nobom_redacted.csv"));) {
+
+        try(InputStream csvInputStream = getClass().getResourceAsStream("/inventory_expanded_nobom_redacted.csv");
+        CSVReader csvReader = new CSVReader(new InputStreamReader(csvInputStream, StandardCharsets.UTF_8))) {
+
             String[] values = null;
             while ((values = csvReader.readNext()) != null) {
                 inventory.add(Arrays.asList(values));
             }
         } catch (CsvValidationException | IOException e) {
             System.out.println(e.getMessage());
-        } 
+        }
         //inventory.forEach(inner -> System.out.println(inner));
 
         //List<Item> items = new ArrayList<>();
@@ -65,7 +71,11 @@ public class CsvImporter {
     public Map<String, Map<String, String>> getOpeningHoursFromCSV() {
         List<List<String>> openingHours = new ArrayList<List<String>>();
 
-        try(CSVReader csvReader = new CSVReader(new FileReader("src/main/resources/PhotoShop_OpeningHours.csv"));) {
+        //try(CSVReader csvReader = new CSVReader(new FileReader("src/main/resources/PhotoShop_OpeningHours.csv"));) {
+
+        try(InputStream csvInputStream = getClass().getResourceAsStream("/PhotoShop_OpeningHours.csv");
+        CSVReader csvReader = new CSVReader(new InputStreamReader(csvInputStream, StandardCharsets.UTF_8))) {
+
             csvReader.readNext();
             String[] values = null;
             while ((values = csvReader.readNext()) != null) {

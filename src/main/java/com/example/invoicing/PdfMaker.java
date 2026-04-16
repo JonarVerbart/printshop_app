@@ -68,7 +68,7 @@ public class PdfMaker {
     /**
      * Main entry point to generate the invoice.
      */
-    public void generate(Path logoPath, Customer customer, Order order, Path outputFile) throws IOException {
+    public void generate(String logoPath, Customer customer, Order order, Path outputFile) throws IOException {
         try (PDDocument doc = new PDDocument()) {
 
             PDPage page = new PDPage(PDRectangle.A4);
@@ -117,7 +117,7 @@ public class PdfMaker {
     // ---------------------------------------------------------------
     // HEADER
     // ---------------------------------------------------------------
-    private float drawHeader(PDDocument doc, PDPageContentStream cs, PDPage page, Path logoPath, float y) throws IOException {
+    private float drawHeader(PDDocument doc, PDPageContentStream cs, PDPage page, String logoPath, float y) throws IOException {
         float x = MARGIN_L;
 
         // Company name
@@ -131,8 +131,8 @@ public class PdfMaker {
         y -= (LEADING + 4);
 
         // Logo (right side)
-        if (logoPath != null && Files.exists(logoPath)) {
-            BufferedImage img = ImageIO.read(logoPath.toFile());
+        if (logoPath != null && getClass().getResource(logoPath) != null) {
+            BufferedImage img = ImageIO.read(getClass().getResourceAsStream(logoPath));
             if (img != null) {
                 PDImageXObject logo = LosslessFactory.createFromImage(doc, img);
                 float maxW = 120f;

@@ -1,7 +1,6 @@
 package com.example.constants;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class Constants {
     
@@ -11,6 +10,7 @@ public class Constants {
     
     public static final String COMPANY_NAME = "PhotoShop PhotoShop";
 
-    public static final Path COMPANY_LOGO_PATH = Paths.get("src/main/resources/PhotoShop.png");
+    //public static final Path COMPANY_LOGO_PATH = Paths.get("src/main/resources/PSLogo.png");
+    public static final String COMPANY_LOGO_RESOURCE = "/PSLogo.png";
     public static final Path INVOICE_SAVE_PATH = Path.of(System.getProperty("user.dir") + "/invoice.pdf");
 }
